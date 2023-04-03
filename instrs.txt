@@ -1,0 +1,13 @@
+mvn clean -f pom.xml
+mvn compile -f pom.xml
+mvn package -f pom.xml
+
+cd test
+java -jar ../target/gpGroupInXLS.jar NovVacationGrouped.xlsx
+ 
+references:
+https://www.java67.com/2014/09/how-to-read-write-xlsx-file-in-java-apache-poi-example.html
+
+formulaEvaluator:
+https://stackoverflow.com/questions/39993683/alternative-to-deprecated-getcelltype
+

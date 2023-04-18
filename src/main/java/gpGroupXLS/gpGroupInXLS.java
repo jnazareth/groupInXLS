@@ -14,6 +14,9 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import gpGroupXLS.group.groupXLS;
+
 import org.apache.poi.ss.util.CellReference;
 
 public class gpGroupInXLS {
@@ -22,10 +25,10 @@ public class gpGroupInXLS {
 			gpGroupInXLS app = new gpGroupInXLS();
 
 			int parmNo;
-			String xlsGroupFile = "" ;
+			String xlsGroupFile = "", configJSON = "" ;
 
 			//command line optional parameters
-			if (args.length == 0 || args.length > 2) {
+			if (args.length == 0 || args.length > 3) {
 				//app.showUsage() ;
 				return;
 			}
@@ -36,12 +39,14 @@ public class gpGroupInXLS {
 					return;
 				}
 				else {
-					if (parmNo == 0) xlsGroupFile = args[parmNo] ;
+					if (parmNo == 0) configJSON = args[parmNo] ;
+					if (parmNo == 1) xlsGroupFile = args[parmNo] ;
 				}
 			}
 
 			groupXLS grpXLS = new groupXLS() ;
-			grpXLS.ReadXLSBuildGroup(xlsGroupFile) ;
+			grpXLS.ReadXLSBuildGroup2(configJSON, xlsGroupFile) ;
+			//grpXLS.ReadXLSBuildGroup(xlsGroupFile) ;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -1,0 +1,36 @@
+{
+  "groupTabs": [
+    {
+      "filename": "NovVacation.xlsx",
+      "groupname": "nov.usd",
+      "currency": "usd",
+      "format": "_($* #,##0.00_);_($* (#,##0.00);_($* \"-\"??_);_(@_)",
+      "sumColumns": "[C9:C20]"
+    },
+    {
+      "filename": "NovVacation.xlsx",
+      "groupname": "nov.eur",
+      "currency": "eur",
+      "format": "[$EUR-x-euro2] #,##0.00_);([$EUR-x-euro2] #,##0.00)",
+      "sumColumns": "[C9:C20]"
+    }
+  ],
+  "targetCurrrencies": [
+    {
+      "currency": "usd",
+      "format": "_($* #,##0.00_);_($* (#,##0.00);_($* \"-\"??_);_(@_)",
+      "rates": [
+        "1",
+        "1.08642"
+      ]
+    },
+    {
+      "currency": "gbp",
+      "format": "[$GBP-en-GB] #,##0.00",
+      "rates": [
+        "0.809549445",
+        "0.879510708"
+      ]
+    }
+  ]
+}

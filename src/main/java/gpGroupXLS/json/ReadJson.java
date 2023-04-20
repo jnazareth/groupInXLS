@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.ArrayList;
 
 public class ReadJson {
     public tabGroup readJSONConfigFile(String configFile, String xlsGroupFile) {
@@ -41,24 +42,27 @@ public class ReadJson {
 			TabSummary2 ts = new TabSummary2() ;
 			ts.setXLSFileName(xlsGroupFile) ;
 
-			Set<String> fC = new LinkedHashSet<String>();
+            String cd  = (String) jo.get(JSONKeys.keySumColumns);
+			ts.setCoords(cd) ;
+
             JSONArray joGroupTabs ;
             joGroupTabs = (JSONArray)jo.get(JSONKeys.keyGrouptabs);
+			ArrayList<String> fCurrencies = new ArrayList<String>(joGroupTabs.size()) ;
             for (int i = 0; i < joGroupTabs.size(); i++) {
                 JSONObject item = (JSONObject)joGroupTabs.get(i);
                 String fName = (String)item.get(JSONKeys.keyFileName);
                 String gName = (String)item.get(JSONKeys.keyGroupName);
                 String fCur = (String)item.get(JSONKeys.keyCurrency);
                 String sFormat = (String)item.get(JSONKeys.keyFormat);
-                String sSumColumns = (String)item.get(JSONKeys.keySumColumns);
                 //System.out.println("fName:" + fName + "\t\tgName:" + gName + "\t\tsCurrency:" + fCur + "\t\tsFormat:" + sFormat + "\t\tsSumColumns:" + sSumColumns);
 
-				fC.add(fCur) ;
-				ts.addItem(fName, gName, fCur, sFormat, sSumColumns) ;
+				fCurrencies.add(fCur) ;
+				//ts.addItem(fName, gName, fCur, sFormat, sSumColumns) ;
+				ts.addItem(fName, gName, fCur, sFormat) ;
             }
+            //ts.dump() ;
 
 			ExchangeRateTable2 xrt2 = new ExchangeRateTable2();
-
             JSONArray joTargetCurrrencies ;
             joTargetCurrrencies = (JSONArray)jo.get(JSONKeys.keyTargetCurrrencies);
             for (int i = 0; i < joTargetCurrrencies.size(); i++) {
@@ -69,23 +73,22 @@ public class ReadJson {
 
 	            JSONArray joRates ;
 	            joRates = (JSONArray)item.get(JSONKeys.keyRates);
-				Set<String> dR = new LinkedHashSet<String>();
+				ArrayList<String> arrayRates = new ArrayList<String>(joRates.size()) ;
 	            for (int j = 0; j < joRates.size(); j++) {
 					String rate = (String)joRates.get(j);
-	                //System.out.println("sRate:" + rate);
-	                dR.add(rate) ;
+	                arrayRates.add(rate) ;
 				}
 
-				String[] fromCurrency = new String[fC.size()];
-				fromCurrency = fC.toArray(fromCurrency) ;
+				String[] fromCurrency = new String[fCurrencies.size()];
+				fromCurrency = fCurrencies.toArray(fromCurrency) ;
 
-				String[] rates = new String[dR.size()];
-				rates = dR.toArray(rates) ;
+				String[] arates = new String[arrayRates.size()];
+				arates = arrayRates.toArray(arates) ;
 
-				xrt2.addRates(fromCurrency, toCurrency, rates, sFormat);
-            }
+				xrt2.addRates(fromCurrency, toCurrency, arates, sFormat);            }
+				//xrt2.dump() ;
+
 			reader.close();
-
 			tg = new tabGroup(ts, xrt2);
 			return tg;
         } catch (FileNotFoundException e) {

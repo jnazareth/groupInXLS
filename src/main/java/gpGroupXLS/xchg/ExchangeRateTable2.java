@@ -3,14 +3,14 @@ package gpGroupXLS.xchg;
 import gpGroupXLS.currency.currencyInfo;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class ExchangeRateTable2 {
-    public HashMap<String, targetCurrencies> m_targetGrid;
+    public LinkedHashMap<String, targetCurrencies> m_targetGrid;
 
     public void addRates(String[] fC, String tC, String[] rates, String format) {
-        if (m_targetGrid == null) m_targetGrid = new HashMap<String, targetCurrencies>();
+        if (m_targetGrid == null) m_targetGrid = new LinkedHashMap<String, targetCurrencies>();
         targetCurrencies tCur = new targetCurrencies(fC, tC, rates, format);
         m_targetGrid.put(tC, tCur);
     }

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 public class TabSummary2 {
 	public ArrayList<tabGroupBase>	m_groupTabs = null;
 	String xlsFileName;
+	public _Coordinates coords;
 
 	public void setXLSFileName(String xFN) {
 		xlsFileName = xFN;
@@ -14,9 +15,17 @@ public class TabSummary2 {
 	public String getXLSFileName() {
 		return xlsFileName ;
 	}
-    
-	public ArrayList<tabGroupBase> addItem(String fN, String gN, String c, String f, String cd) {
-		tabEntry2 tE = new tabEntry2(fN, gN, c, f, cd) ;
+
+	public _Coordinates getCoords() {
+		return coords;
+	}
+
+	public void setCoords(String cd) {
+		coords = new _Coordinates(cd);
+	}
+
+	public ArrayList<tabGroupBase> addItem(String fN, String gN, String c, String f) {
+		tabEntry2 tE = new tabEntry2(fN, gN, c, f) ;
         tabGroupBase tgb = new tabGroupBase(tE);
 		if (m_groupTabs == null) m_groupTabs = new ArrayList<tabGroupBase>() ;
 		boolean b = m_groupTabs.add(tgb) ;
@@ -45,17 +54,15 @@ public class TabSummary2 {
 		public String groupName;
 		public String currency;
 		public String format;
-		public _Coordinates coords;
 
 		public tabEntry2() {
 		}
 
-		public tabEntry2(String fN, String gN, String c, String f, String cd) {
+		public tabEntry2(String fN, String gN, String c, String f) {
 			fileName = fN;
 			groupName = gN;
 			currency = c;
 			format = f;
-			coords = new _Coordinates(cd);
 		}
 
 		public void dump() {

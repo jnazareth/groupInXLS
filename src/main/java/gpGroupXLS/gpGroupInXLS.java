@@ -1,23 +1,7 @@
 package gpGroupXLS;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.sql.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import gpGroupXLS.group.groupXLS2;
 
-import gpGroupXLS.group.groupXLS;
-
-import org.apache.poi.ss.util.CellReference;
 
 public class gpGroupInXLS {
 	public static void main(String[] args) {
@@ -44,9 +28,8 @@ public class gpGroupInXLS {
 				}
 			}
 
-			groupXLS grpXLS = new groupXLS() ;
+			groupXLS2 grpXLS = new groupXLS2() ;
 			grpXLS.ReadXLSBuildGroup2(configJSON, xlsGroupFile) ;
-			//grpXLS.ReadXLSBuildGroup(xlsGroupFile) ;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

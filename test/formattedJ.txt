@@ -1,0 +1,36 @@
+{
+	"mapping":
+	[
+		{
+			"groupName":"simran",
+			"csvJSONFile":"simran.mar.mint.out.json",
+			"csvFile":"simran.mar.mint.out.csv"
+		},
+		{
+			"groupName":"moira.nazareth.inr",
+			"csvJSONFile":"moira.nazareth.inr.mar.mint.out.json",
+			"csvFile":"moira.nazareth.inr.mar.mint.out.csv"
+		}
+	],
+	"filename":"mar.mint.csv"
+}
+
+_____________
+
+{
+	"headers":2,
+	"pivot":{
+		"header":"[R2:R2]",
+		"area":"[R2:R18][C1:C18]",
+		"format":{
+			"columns":"[C9:C10]",
+			"format":"#,##0.00_);(#,##0.00)"
+		}
+	},
+	"csvFile":"auto.mar.mint.out.csv",
+	"table":{
+		"rows":"[R3:R3]",
+		"columns":"[C5:C5],[C9:C16]",
+		"format":"#,##0.00_);(#,##0.00)"
+	}
+}

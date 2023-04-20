@@ -1,0 +1,70 @@
+{
+  "groupTabs": [
+    {
+      "filename": "aug.mint.csv.xlsx",
+      "groupname": "singapore.usd",
+      "currency": "usd",
+      "format": "_($* #,##0.00_);_($* (#,##0.00);_($* \"-\"??_);_(@_)"
+    },
+    {
+      "filename": "aug.mint.csv.xlsx",
+      "groupname": "singapore.inr",
+      "currency": "inr",
+      "format": "[$INR] #,##0.00_);[Red]([$INR] #,##0.00)"
+    },
+    {
+      "filename": "aug.mint.csv.xlsx",
+      "groupname": "singapore.sgd",
+      "currency": "sgd",
+      "format": "[$SGD] #,##0.00_);[Red]([$SGD] #,##0.00)"
+    }
+  ],
+  "sumColumns": "[C9:C18]",
+  "targetCurrrencies": [
+    {
+      "currency": "usd",
+      "format": "_($* #,##0.00_);_($* (#,##0.00);_($* \"-\"??_);_(@_)",
+      "rates": [
+        "1",
+        "0.014099145",
+        "0.728769487"
+      ]
+    },
+    {
+      "currency": "inr",
+      "format": "[$INR] #,##0.00_);[Red]([$INR] #,##0.00)",
+      "rates": [
+        "70.926285",
+        "1",
+        "51.73"
+      ]
+    },
+    {
+      "currency": "sgd",
+      "format": "[$SGD] #,##0.00_);[Red]([$SGD] #,##0.00)",
+      "rates": [
+        "1.372176",
+        "0.019331142",
+        "1"
+      ]
+    },
+    {
+      "currency": "gbp",
+      "format": "[$GBP] #,##0.00_);[Red]([$GBP] #,##0.00)",
+      "rates": [
+        "0.771254",
+        "0.010874017",
+        "0.562066"
+      ]
+    },
+    {
+      "currency": "eur",
+      "format": "[$EUR] #,##0.00_);[Red]([$EUR] #,##0.00)",
+      "rates": [
+        "0.862136",
+        "0.012155379",
+        "0.628298173"
+      ]
+    }
+  ]
+}

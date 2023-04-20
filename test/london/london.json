@@ -1,0 +1,35 @@
+{
+  "groupTabs": [
+    {
+      "filename": "lon.mint.csv.xlsx",
+      "groupname": "london.usd",
+      "currency": "usd",
+      "format": "_($* #,##0.00_);_($* (#,##0.00);_($* \"-\"??_);_(@_)"
+    },
+    {
+      "filename": "lon.mint.csv.xlsx",
+      "groupname": "london.gbp",
+      "currency": "gbp",
+      "format": "[$GBP] #,##0.00_);[Red]([$GBP] #,##0.00)"
+    }
+  ],
+  "sumColumns": "[C9:C18]",
+  "targetCurrrencies": [
+    {
+      "currency": "usd",
+      "format": "_($* #,##0.00_);_($* (#,##0.00);_($* \"-\"??_);_(@_)",
+      "rates": [
+        "1",
+        "1.33"
+      ]
+    },
+    {
+      "currency": "gbp",
+      "format": "[$GBP] #,##0.00_);[Red]([$GBP] #,##0.00)",
+      "rates": [
+        "0.751879699",
+        "1"
+      ]
+    }
+  ]
+}

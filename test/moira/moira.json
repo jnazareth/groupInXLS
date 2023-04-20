@@ -1,0 +1,91 @@
+{
+  "groupTabs": [
+    {
+          "filename": "moira.nazareth v2.xlsx",
+          "groupname": "moira.nazareth.usd (oct)",
+          "currency": "usd",
+          "format": "$#,##0.00_);[Red]($#,##0.00)"
+    },
+    {
+          "filename": "moira.nazareth v2.xlsx",
+          "groupname": "moira.nazareth.usd (nov)",
+          "currency": "usd",
+          "format": "$#,##0.00_);[Red]($#,##0.00)"
+    },
+    {
+          "filename": "moira.nazareth v2.xlsx",
+          "groupname": "moira.nazareth.inr (nov)",
+          "currency": "inr",
+          "format": "[$INR] #,##0.00_);[Red]([$INR] #,##0.00)"
+    },
+    {
+          "filename": "moira.nazareth v2.xlsx",
+          "groupname": "moira.nazareth.inr (dec)",
+          "currency": "inr",
+          "format": "[$INR] #,##0.00_);[Red]([$INR] #,##0.00)"
+    },
+    {
+          "filename": "jan.mint.csv.xlsx",
+          "groupname": "moira.nazareth.inr",
+          "currency": "inr",
+          "format": "[$INR] #,##0.00_);[Red]([$INR] #,##0.00)"
+    },
+    {
+          "filename": "jan.mint.csv.xlsx",
+          "groupname": "bellavista.nazareth.inr",
+          "currency": "inr",
+          "format": "[$INR] #,##0.00_);[Red]([$INR] #,##0.00)"
+    },
+    {
+          "filename": "may.mint.csv.xlsx",
+          "groupname": "moira.nazareth.inr (nov)",
+          "currency": "inr",
+          "format": "[$INR] #,##0.00_);[Red]([$INR] #,##0.00)"
+    },
+    {
+          "filename": "jun.mint.csv.xlsx",
+          "groupname": "moira.nazareth.inr",
+          "currency": "inr",
+          "format": "[$INR] #,##0.00_);[Red]([$INR] #,##0.00)"
+    },
+    {
+          "filename": "jun.mint.csv.xlsx",
+          "groupname": "moira.nazareth.usd",
+          "currency": "usd",
+          "format": "_($* #,##0.00_);_($* (#,##0.00);_($* \"-\"??_);_(@_)"
+    }
+  ],
+  "sumColumns": "[C9:C22]", 
+  "targetCurrrencies": [
+    {
+      "currency": "usd",
+      "format": "$#,##0.00_);[Red]($#,##0.00)",
+      "rates": [
+        "1",
+        "1",
+        "0.014099145",
+        "0.014099145",
+        "0.014099145",
+        "0.014099145",
+        "0.014099145",
+        "0.014099145",
+        "1"
+      ]
+    },
+    {
+      "currency": "inr",
+      "format": "[$INR] #,##0.00_);[Red]([$INR] #,##0.00)",
+      "rates": [
+        "70.926285",
+        "70.926285",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "70.926285"
+      ]
+    }
+  ]
+}

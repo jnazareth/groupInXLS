@@ -1,0 +1,1 @@
+java -jar ../../target/gpGroupInXLS.jar moira.json moira.summary.xlsx

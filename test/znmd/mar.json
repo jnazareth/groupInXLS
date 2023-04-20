@@ -4,10 +4,10 @@
       "filename": "mar.mint.csv.xlsx",
       "groupname": "auto",
       "currency": "usd",
-      "format": "_($* #,##0.00_);_($* (#,##0.00);_($* \"-\"??_);_(@_)",
-      "sumColumns": "[C9:C22]"
+      "format": "_($* #,##0.00_);_($* (#,##0.00);_($* \"-\"??_);_(@_)"
     }
   ],
+  "sumColumns": "[C9:C22]",
   "targetCurrrencies": [
     {
       "currency": "usd",

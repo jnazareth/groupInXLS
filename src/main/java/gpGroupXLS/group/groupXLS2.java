@@ -16,27 +16,23 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.List;
 
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.util.CellAddress;
 import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.ss.usermodel.DataFormat;
-import org.apache.poi.xssf.usermodel.XSSFTable;
 
 public class groupXLS2 {
-	private final String _SHEETNAME = "Summary" ;
+	private final String _SUMMARYSHEETNAME = "Summary" ;
+	private final String _XRATESHEETNAME = "XRates" ;
 
 	public File InitializeXLS(String fName) {
         File f = null ;
@@ -74,7 +70,7 @@ public class groupXLS2 {
     }
 
 	private void buildExchangeGroupHeader(XSSFWorkbook wbSummary, String toCurrency) {
-		XSSFSheet sheetSummary = wbSummary.getSheet(_SHEETNAME) ;
+		XSSFSheet sheetSummary = wbSummary.getSheet(_SUMMARYSHEETNAME) ;
 		if (sheetSummary == null) return;
 
 		int lastRow = sheetSummary.getLastRowNum() + 2 ;
@@ -91,7 +87,7 @@ public class groupXLS2 {
 	}
 
 	private void buildExchangeGroupSum(XSSFWorkbook wbSummary, String toCurrency, LinkedHashSet<Integer> rA, _Coordinates cd, String format) {
-		XSSFSheet sheetSummary = wbSummary.getSheet(_SHEETNAME) ;
+		XSSFSheet sheetSummary = wbSummary.getSheet(_SUMMARYSHEETNAME) ;
 		if (sheetSummary == null) return ;
 
 		int lastRow = sheetSummary.getLastRowNum();
@@ -123,9 +119,9 @@ public class groupXLS2 {
 		}
 	}
 
-	private int buildExchangeGroup2(XSSFWorkbook wbSummary, String toCurrency, int sourceRow, Double rate, String format) {
+	private int buildExchangeGroup2(XSSFWorkbook wbSummary, String toCurrency, int sourceRow, Double rate, String rateReference, String format) {
 		int rowAdded = -1 ;
-		XSSFSheet sheetSummary = wbSummary.getSheet(_SHEETNAME) ;
+		XSSFSheet sheetSummary = wbSummary.getSheet(_SUMMARYSHEETNAME) ;
 		if (sheetSummary == null) return rowAdded;
 		Row sRow = sheetSummary.getRow(sourceRow);
 		if (sRow == null) return rowAdded;
@@ -156,10 +152,15 @@ public class groupXLS2 {
 					case NUMERIC:
 						Double d = celldata.getNumericCellValue() ;
 						cellTarget = newRow.createCell(col);
-						cellTarget.setCellValue(d * rate);	// apply rate
+						//cellTarget.setCellValue(d * rate);	// apply rate
+
+						CellReference cS = new CellReference(celldata) ;
+						CellReference xR = new CellReference(rateReference);
+						String sFormula = cS.formatAsString() + " * " +  xR.formatAsString() ;
+						cellTarget.setCellFormula(sFormula) ;
+
 						cellTarget.setCellStyle(cellStyle);	// apply format
-						//CellAddress c1 = cellTarget.getAddress();
-						//System.out.println("cell address:" + c1.formatAsString() + "|c:" + c1.getColumn() + "|r:" + c1.getRow());
+
 						break;
 					default:
 						break;
@@ -282,8 +283,8 @@ public class groupXLS2 {
 		XSSFSheet sheetToBeGrouped = workBookIn.getSheet(groupName) ;
 		if (sheetToBeGrouped == null) return -1 ;
 
-		XSSFSheet sheetSummary = workBookGroup.getSheet(_SHEETNAME) ;
-		if (sheetSummary == null) sheetSummary = workBookGroup.createSheet(_SHEETNAME);
+		XSSFSheet sheetSummary = workBookGroup.getSheet(_SUMMARYSHEETNAME) ;
+		if (sheetSummary == null) sheetSummary = workBookGroup.createSheet(_SUMMARYSHEETNAME);
 
 		LinkedHashSet<Integer> rowsToCopy = new LinkedHashSet<Integer>();
 		if (bFirst) {
@@ -296,9 +297,9 @@ public class groupXLS2 {
 
 	private void buildBaseGrid(XSSFWorkbook workBookGroup, tabGroup tg) {
 		try {
-			boolean bFirst = true ;
 			XSSFWorkbook workBookIn = null;
 			TabSummary2 ts2 = tg.m_tabSummary ;
+			boolean bFirst = true ;
 			for (tabGroupBase tgb : ts2.m_groupTabs) {
 				tabEntry2 gItem = tgb.te;
 				File fIn = new File(gItem.fileName);
@@ -325,6 +326,8 @@ public class groupXLS2 {
 		try {
 			ExchangeRateTable2 ert2 = tg.m_xTable;
 			LinkedHashMap<String, targetCurrencies> tGrid = ert2.m_targetGrid;
+
+			int r = 0 ;
 			for (Map.Entry<String, targetCurrencies> tC : tGrid.entrySet()) {
 				String toCurrency = tC.getKey();
 				// add header
@@ -337,10 +340,13 @@ public class groupXLS2 {
 				ArrayList<exchangePair> tR = tCs.m_targetRates;
 				for (int i = 0; i < tR.size(); i++) {
 					Double rate = tR.get(i).rate;
+					String fromCurrency = tR.get(i).fromCurrency ;
+					String rateReference = ert2.getRateReference(i, r) ;
+
 					TabSummary2 ts2 = tg.m_tabSummary ;
 					int row = ts2.m_groupTabs.get(i).rowNumber;
 					if (row != -1) {
-						int rA = buildExchangeGroup2(workBookGroup, toCurrency, row, rate, cFormat) ;
+						int rA = buildExchangeGroup2(workBookGroup, toCurrency, row, rate, rateReference, cFormat) ;
 						if (rA != -1) rowsAdded.add(rA) ;
 					}
 				}
@@ -348,7 +354,136 @@ public class groupXLS2 {
 				// add sum
 				_Coordinates cd = tg.m_tabSummary.getCoords() ;
 				buildExchangeGroupSum(workBookGroup, toCurrency, rowsAdded, cd, cFormat) ;
+				r++ ;
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private CellReference addXRSheet(XSSFWorkbook workBookGroup, String[][] arrayRates) {
+		try {
+			XSSFSheet sheetXRate = workBookGroup.getSheet(_XRATESHEETNAME) ;
+			if (sheetXRate == null) sheetXRate = workBookGroup.createSheet(_XRATESHEETNAME);
+
+			for (int i = 0; i < arrayRates.length ; i++) {
+				Row newRow = sheetXRate.createRow(i);
+				for (int j = 0; j < arrayRates[i].length; j++) {
+					Cell cellTarget = newRow.createCell(j);
+					cellTarget.setCellValue(arrayRates[i][j]);
+				}
+			}
+			// start of table = cell "from|to"
+			CellReference a1 = new CellReference(sheetXRate.getSheetName() + "!A1");
+			return a1;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null ;
+	}
+
+	private void dumprates(String[][] a){
+		for (int i = 0; i < a.length ; i++) {
+			for (int j = 0; j < a[i].length; j++) {
+				System.out.println("[" + i + "][" + j + "]:" + a[i][j]) ;
+			}
+		}
+	}
+
+	private String[][] transpose(String[][] array) {
+		if (array == null || array.length == 0) return array;
+		int width = array.length;
+		int height = array[0].length;
+		String[][] array_new = new String[height][width];
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				array_new[y][x] = array[x][y];
+			}
+		}
+		return array_new;
+	}
+
+	private String[][] buildratesArrayGrid(tabGroup tg) {
+		try {
+			ExchangeRateTable2 ert2 = tg.m_xTable;
+			LinkedHashMap<String, targetCurrencies> tGrid = ert2.m_targetGrid;
+			int m = tGrid.entrySet().size();
+			int n = 0;
+			for (Map.Entry<String, targetCurrencies> tC : tGrid.entrySet()) {
+				String toCurrency = tC.getKey();
+				targetCurrencies fCs = tC.getValue();
+				n = fCs.m_targetRates.size();
+			}
+			String[][] xratesGrid = new String[m+1][n+1];
+			ArrayList<String> aRow = new ArrayList<String>(n+1);
+			ArrayList<String> aCol = new ArrayList<String>(m+1);
+
+			ert2 = tg.m_xTable;
+			tGrid = ert2.m_targetGrid;
+			int r = 0 ;
+			boolean bRowHeader = true ;
+			for (Map.Entry<String, targetCurrencies> tC : tGrid.entrySet()) {
+				//String toCurrency = tC.getKey();
+				targetCurrencies fCs = tC.getValue();
+
+				aRow.clear();
+				//aRow.add(toCurrency);
+				boolean bColHeader = true;
+				aCol.clear();
+				if (bColHeader) aCol.add("from|to");
+				for (exchangePair ep : fCs.m_targetRates) {
+					if (bColHeader) {
+						aRow.add(ep.toCurrency);
+						bColHeader = false;
+					}
+					aRow.add(String.valueOf(ep.rate));
+					if (bRowHeader) {
+						aCol.add(ep.fromCurrency);
+					}
+				}
+				if (bRowHeader) {
+					String[] header = new String[aCol.size()];
+					xratesGrid[r] = aCol.toArray(header);
+					bRowHeader = false;
+					r++ ;
+				}
+				String[] arates = new String[aRow.size()];
+				xratesGrid[r] = aRow.toArray(arates);
+				r++ ;
+			}
+			xratesGrid = transpose(xratesGrid);
+			return xratesGrid;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	private CellReference addXRateSheet2(XSSFWorkbook workBookGroup, tabGroup tg) {
+		try {
+			String[][] arrayRates = buildratesArrayGrid(tg);
+			if (arrayRates == null) return null;
+
+			CellReference cr = addXRSheet(workBookGroup, arrayRates);
+			if (cr == null) return null;
+
+			String[] crParts = cr.getCellRefParts() ;
+			if ((crParts == null) || (crParts.length == 0)) return null ;
+
+			return cr ;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null ;
+	}
+
+	private void buildXRateGrid(XSSFWorkbook workBookGroup, tabGroup tg) {
+		try {
+			CellReference cr = addXRateSheet2(workBookGroup, tg) ;
+			if (cr == null) return ;
+
+			ExchangeRateTable2 ert2 = tg.m_xTable;
+			ert2.buildRateReferenceGrid(cr);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -360,6 +495,7 @@ public class groupXLS2 {
 			FileInputStream fileGroup = new FileInputStream(fGroup);
 			XSSFWorkbook workBookGroup = new XSSFWorkbook(fileGroup);
 
+			buildXRateGrid(workBookGroup, tg) ;
 			buildBaseGrid(workBookGroup, tg) ;
 			buildTargetGrid(workBookGroup, tg) ;
 

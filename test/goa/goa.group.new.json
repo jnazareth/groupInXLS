@@ -1,0 +1,75 @@
+{
+  "groupTabs": [
+    {
+      "filename": "goa.ffv.csv.xlsx",
+      "groupname": "moira.nazareth.inr.goa",
+      "currency": "inr",
+      "format": "[$INR] #,##0.00_);[Red]([$INR] #,##0.00)",
+    },
+    {
+      "filename": "attorneys.goa.ffv.csv.xlsx",
+      "groupname": "moira.nazareth.usd.goa",
+      "currency": "usd",
+      "format": "_($* #,##0.00_);_($* (#,##0.00);_($* \"-\"??_);_(@_)"
+    },
+    {
+      "filename": "attorneys.goa.ffv.csv.xlsx",
+      "groupname": "moira.nazareth.inr1.goa",
+      "currency": "inr",
+      "format": "[$INR] #,##0.00_);[Red]([$INR] #,##0.00)",
+    },
+    {
+      "filename": "attorneys.goa.ffv.csv.xlsx",
+      "groupname": "moira.nazareth.inr2.goa",
+      "currency": "inr",
+      "format": "[$INR] #,##0.00_);[Red]([$INR] #,##0.00)",
+    },
+    {
+      "filename": "attorneys.goa.ffv.csv.xlsx",
+      "groupname": "moira.nazareth.inr3.goa",
+      "currency": "inr",
+      "format": "[$INR] #,##0.00_);[Red]([$INR] #,##0.00)",
+    },
+    {
+      "filename": "india2.ffv.csv.xlsx",
+      "groupname": "moira.nazareth.inr.goa",
+      "currency": "inr",
+      "format": "[$INR] #,##0.00_);[Red]([$INR] #,##0.00)",
+    },
+    {
+      "filename": "india2.ffv.csv.xlsx",
+      "groupname": "moira.nazareth.usd.goa",
+      "currency": "usd",
+      "format": "_($* #,##0.00_);_($* (#,##0.00);_($* \"-\"??_);_(@_)"
+    }
+  ],
+  "sumColumns": "[C13:C24]",
+  "targetCurrrencies": [
+    {
+      "currency": "usd",
+      "format": "_($* #,##0.00_);_($* (#,##0.00);_($* \"-\"??_);_(@_)",
+      "rates": [
+        { "rate": "0.01200876",     "date": "03/01/2023" },
+        { "rate": "1",              "date": "03/01/2023" },
+        { "rate": "0.012230951",    "date": "04/01/2023" },
+        { "rate": "0.012197091",    "date": "05/01/2023" },
+        { "rate": "0.011955406",    "date": "10/01/2023" },
+        { "rate": "0.01199309",     "date": "11/01/2023" },
+        { "rate": "1",              "date": "04/01/2024" }
+      ]
+    },
+    {
+      "currency": "inr",
+      "format": "[$INR] #,##0.00_);[Red]([$INR] #,##0.00)",
+      "rates": [
+        { "rate": "1",          "date": "03/01/2023" },
+        { "rate": "80.11536613","date": "03/01/2023" },
+        { "rate": "1",          "date": "04/01/2023" },
+        { "rate": "1",          "date": "05/01/2023" },
+        { "rate": "1",          "date": "10/01/2023" },
+        { "rate": "1",          "date": "11/01/2023" },
+        { "rate": "83.669423",  "date": "04/01/2024" }
+      ]
+    }
+  ]
+}

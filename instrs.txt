@@ -3,9 +3,16 @@ mvn compile -f pom.xml
 mvn package -f pom.xml
 
 cd test
-java -jar ../target/gpGroupInXLS.jar config1.json NovVacationGrouped2.xlsx
-java -jar ../../target/gpGroupInXLS.jar znmd.json znmd.summary.xlsx
-java -jar ../../target/gpGroupInXLS.jar mar.json mar.summary.xlsx
+java -jar ../target/gpGroupInXLS.2.0jar config1.json NovVacationGrouped2.xlsx
+java -jar ../../target/gpGroupInXLS.2.0jar znmd.json znmd.summary.xlsx
+java -jar ../../target/gpGroupInXLS.2.0jar mar.json mar.summary.xlsx
+
+cd goa
+java -jar ../../target/gpGroupInXLS.2.0jar goa.group.json goa.ffv.csv.summary.xlsx
+java -jar ../../target/gpGroupInXLS.2.0jar goa.group.new.json goa.ffv.csv.summary1.xlsx
+
+
+
  
 references:
 https://www.java67.com/2014/09/how-to-read-write-xlsx-file-in-java-apache-poi-example.html

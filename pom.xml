@@ -4,7 +4,9 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>gpGroupXLS</groupId>
-	<artifactId>gpGroupInXLS</artifactId>
+	<!-- using versioning scheme <major>.<minor> -->
+	<!-- where <major>.<minor> = <artifactId> -->	
+	<artifactId>gpGroupInXLS2.0</artifactId>
 	<version>1.0</version>
 
 	<packaging>jar</packaging>

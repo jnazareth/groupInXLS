@@ -10,4 +10,6 @@ public interface JSONKeys {
 	final String keySumColumns 			= "sumColumns" ;
 	final String keyTargetCurrrencies	= "targetCurrrencies" ;
 	final String keyRates 				= "rates" ;
+	final String keyRate 				= "rate" ;
+	final String keyDate 				= "date" ;
 }

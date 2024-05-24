@@ -1,0 +1,78 @@
+// location of "from|to"
+startRowReference = 1
+startColReference = 'A'
+
+int row = startRowRefernce;
+for (Map.Entry<String, targetCurrencies> tC : m_targetGrid.entrySet()) {
+	String toCurrency = tC.getKey();
+	targetCurrencies fCs = tC.getValue();
+
+	char col = startColReference;
+	for (exchangePair ep : fCs.m_targetRates) {
+		fromCurrency ;	// row
+		toCurrency ;	// column
+		rate;		// cell
+		
+		col++ ;
+	}
+}
+
+
+void buildRateReferenceGrid() {
+	// location of "from|to"
+	int startRowReference = 1;
+	char startColReference = 'A';
+
+	ArrayList<Integer> rowRefIndex = new ArrayList<Integer>(fCs.m_targetRates.size()) ;
+	ArrayList<String> rowRefCurrencies = new ArrayList<String>(fCs.m_targetRates.size()) ;
+	
+	ArrayList<String> colRefIndex = new ArrayList<String>(m_targetGrid.entrySet().size()) ;
+	ArrayList<String> colRefCurrencies = new ArrayList<String>(fCs.m_targetRates.size()) ;
+	
+	int row = startRowReference ;
+	for (Map.Entry<String, targetCurrencies> tC : m_targetGrid.entrySet()) {
+		String toCurrency = tC.getKey();
+
+		targetCurrencies fCs = tC.getValue();
+		char col = startColReference;
+		for (exchangePair ep : fCs.m_targetRates) {
+			fromCurrency ;	// row
+			toCurrency ;	// column
+			rate;		// cell
+
+			colRefIndex.add((++col)) ;
+			colRefCurrencies.add(toCurrency) ;
+		}
+		rowRefIndex.add((++row)) ;
+		rowRefCurrencies.add(fromCurrency) ;
+	}
+}
+
+//String getRateReference(String fromCurrency, String toCurrency) {
+
+
+String getRateReference(int fromCurrency, int toCurrency) {
+	int rRefIndex = rowRefIndex.get(fromCurrency) ;
+	int cRefIndex = colRefIndex.get(toCurrency) ;
+	return rRefIndex  + ":" + cRefIndex ;
+}
+
+void getXRates() {
+	int r = 1 ; 
+	for (Map.Entry<String, targetCurrencies> tC : m_targetGrid.entrySet()) {
+		String toCurrency = tC.getKey();
+
+		int c = 1 ; 
+		targetCurrencies fCs = tC.getValue();
+		for (exchangePair ep : fCs.m_targetRates) {
+			fromCurrency ;	// row
+			toCurrency ;	// column
+			rate;		// cell
+
+			String xRef = getRateReference(r, c) ;
+			
+			c++ ;
+		}
+		r++ ;
+	}
+}

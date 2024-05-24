@@ -6,6 +6,13 @@ public class _Coordinates {
 	HashSet<Integer> _range = null ;
 	String		_coords ;
 
+	// CONSTANTS
+	final String sLeftBr = "[";
+	final String sRightBr = "]";
+	final String sRange = ":";
+	final String sSeparator = ",";
+	final String sColumn = "C";
+
     public _Coordinates() {
 		_range = new HashSet<Integer>() ;
 	}
@@ -14,6 +21,12 @@ public class _Coordinates {
 		if (_range != null) _range = new HashSet<Integer>() ;
 		_range = buildRange(sR) ;
         _coords = sR;
+    }
+
+    public _Coordinates(HashSet<Integer> r) {
+		_range = new HashSet<Integer>() ;
+		_range.addAll(r);
+        _coords = buildStringRange(r);
     }
 
 	public HashSet<Integer> toCoordsSet() {
@@ -25,12 +38,6 @@ public class _Coordinates {
 	}
 
     private void getStartEndRange(String sFormatColumn, int s[], int e[]) {
-		// CONSTANTS
-        final String sLeftBr = "[";
-        final String sRightBr = "]";
-        final String sRange = ":";
-        final String sSeparator = ",";
-
         String sStart = "", sEnd = "" ;
         //String sFormatColumn = "[C9:C10]" ;
         int nStart = sFormatColumn.indexOf(sLeftBr) ;
@@ -68,4 +75,16 @@ public class _Coordinates {
         if (_range == null) return false ;
         return _range.contains(n) ;
     }
+
+	private String buildStringRange(HashSet<Integer> r) {
+	    Integer[] arr = r.toArray(new Integer[0]);
+		int first = arr[0].intValue();
+		int last = arr[arr.length - 1].intValue();
+
+		return (sLeftBr + sColumn + first + sRange + sColumn + last + sRightBr) ;
+	}
+
+	@Override public String toString() {
+		return "_Coordinates [" + toCoordsString() + "]";
+	}
 }

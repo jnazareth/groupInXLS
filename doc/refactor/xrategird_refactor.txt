@@ -1,0 +1,213 @@
+m = tGrid.entrySet().size();		// 2; 0 - 1
+n = fCs.m_targetRates.size();		// 7; 0 - 6
+ 
+//m = m + 1; // header
+//n = (n * 2) + 1; // each entry: rate+date + header
+
+c = (m * 2) + 1; // each entry: rate+date + header
+r = n + 1; 	// header
+
+String[][] xratesGrid = new String[r][c];
+
+ArrayList<RateDate> aRow = new ArrayList<RateDate>(r);
+ArrayList<RateDate> aCol = new ArrayList<RateDate>(c);
+
+r = 0;
+
+final String _sFromTo = "from (C) | to (R)" ;
+final String _sDate = "date" ;
+
+boolean bColHeader = true;
+boolean bRowHeader = true ;
+
+for (Map.Entry<String, targetCurrencies> tC : tGrid.entrySet()) {
+	targetCurrencies fCs = tC.getValue();
+
+	aRow.clear();		aCol.clear();
+	if (bColHeader & bRowHeader) aCol.add(_sFromTo);
+
+	for (exchangePair ep : fCs.m_targetRates) {
+		if (bColHeader) {
+			aCol.add(ep.fromCurrency);
+			aCol.add(_sDate);
+			bColHeader = false;
+		}
+
+		//ep.toCurrency;				// m:: usd	inr
+		//ep.fromCurrency;				// n:: inr	usd	inr	inr	inr	inr	usd
+
+		//aRow.add(String.valueOf(ep.rate));
+		//RateDate rd = new RateDate(ep.rd.rate, ep.rd.date);
+		
+		//aRow.add(String.valueOf(ep.rate));
+		if (bRowHeader) {
+			aRow.add(ep.toCurrency);
+			bRowHeader = false;
+		}
+		
+		aRow.add(ep.rd.rate);
+		aRow.add(ep.rd.date);
+		
+		String[] arates = new String[aRow.size()];
+		xratesGrid[r] = aRow.toArray(arates);
+		r++ ;
+		
+		
+	}
+	
+}
+
+________________________________
+
+
+for each (sC)		// usd	inr
+{
+	for each (tC) 	// inr usd inr inr inr inr usd
+	{
+		if (cH == true) {
+			if (rH == true) { 
+				colHeader.add("from | to");
+				cH = false;
+			}
+			else if (rH == false)
+				colHeader.add(tC);
+		}
+		else if (cH == false) {
+			if (rH == true) {
+				colRate.add(fC);
+				colDate.add("date");
+			}
+			else if (rH == false) {
+				colRate.add(rate);	
+				colDate.add(date);
+			}	
+		}
+	}
+	rH = true;
+}
+_____________________________
+
+c = (m * 2) + 1; 	// each entry: rate+date + header
+r = n + 1; 			// header
+
+String[][] xratesGrid = new String[r][c];
+
+ArrayList<RateDate> aRow = new ArrayList<RateDate>(r);
+ArrayList<RateDate> aCol = new ArrayList<RateDate>(c);
+
+final String _sFromTo = "from (C) | to (R)" ;
+final String _sDate = "date" ;
+
+bDone = false;
+aRow.add(_sFromTo) ;
+//for (i = 0; i < r; i++) {
+while ((i < r) || (bDone == false))
+	if (i == 0) {		// header row
+		for (Map.Entry<String, targetCurrencies> tC : tGrid.entrySet()) {
+			targetCurrencies fCs = tC.getValue();
+			for (exchangePair ep : fCs.m_targetRates) {
+				aRow.add(ep.fromCurrency) ;
+				aRow.add(_sDate) ;				
+			}
+		}
+		String[] header = new String[aRow.size()];
+		xratesGrid[r++] = aRow.toArray(header);
+	} else {
+		aRow.clear() ;
+		for (Map.Entry<String, targetCurrencies> tC : tGrid.entrySet()) {
+			targetCurrencies fCs = tC.getValue();
+			aRow.add(ep.toCurrency) ;
+			for (exchangePair ep : fCs.m_targetRates) {
+				aRow.add(ep.rd.rate) ;
+				aRow.add(ep.rd.date) ;				
+			}
+		}
+		String[] header = new String[aRow.size()];
+		xratesGrid[r++] = aRow.toArray(header);
+	}
+	bDone = true;
+}
+
+
+____________________
+
+ArrayList<RateDate> aRowH = new ArrayList<RateDate>(r);
+ArrayList<RateDate> aColH = new ArrayList<RateDate>(c);
+
+ArrayList<RateDate> aColR = new ArrayList<RateDate>(c-1);
+ArrayList<RateDate> aColD = new ArrayList<RateDate>(c-1);
+
+bDone == false ;
+bColH = false ;
+// headers
+aColH.add(_sFromTo) ;
+aRowH.add(_sFromTo) ;
+i = 0;
+while ((i < r) || (bDone == false))
+{
+	for (Map.Entry<String, targetCurrencies> tC : tGrid.entrySet()) {
+		targetCurrencies fCs = tC.getValue();
+		for (exchangePair ep : fCs.m_targetRates) {
+			if (!bColH) aColH.add(ep.fromCurrency) ;
+
+			aRowH.add(ep.toCurrency) ;
+			aRowH.add(_sDate) ;
+
+			aColR.add(ep.rd.rate) ;
+			aColD.add(ep.rd.date) ;				
+
+		}
+		bColH = true;
+
+		if (i > 0) {
+			String[] rates = new String[aColR.size()];
+			xratesGrid[i][1] = aColR.toArray(rates);
+
+			String[] dates = new String[aColD.size()];
+			xratesGrid[i][1] = aColD.toArray(dates);
+		}
+	}
+	String[] header = new String[aCol.size()];
+	xratesGrid[0][0] = aCol.toArray(header);
+
+	i++ ;
+	if (i == r) bDone = true ;
+}
+
+___________________________________
+
+bDone == false ;
+bColH = true ;
+j = 0;
+while ((j < c) || (bDone == false))
+{
+	for (Map.Entry<String, targetCurrencies> tC : tGrid.entrySet()) {
+		targetCurrencies fCs = tC.getValue();
+		for (exchangePair ep : fCs.m_targetRates) {
+			if (j == 0) {
+				if (bColH) {
+					aCol.add(_sFromTo) ;
+					bColH = false ;
+				}
+				aCol.add(ep.toCurrency) ;
+			} else {
+				if (bColH) {
+					aColR.add(ep.fromCurrency) ;	aColD.add(_sDate) ;
+					bColH = false ;
+				}
+				aColR.add(ep.rd.rate) ;				aColD.add(ep.rd.date) ;				
+			}
+		}
+		bColH = true;
+		if (j == 0) 
+			populateXRates(xratesGrid, aCol, j);
+		else {
+			populateXRates(xratesGrid, aColR, j);
+			populateXRates(xratesGrid, aColD, j+1);
+		}
+		j += 2;
+		if (j == c) bDone = true ;
+	}
+	bDone = true; // break the loop, required?
+}
+

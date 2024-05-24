@@ -35,7 +35,8 @@ public class TabSummary2 {
 
 	public void dump() {
 		for (tabGroupBase tgb : m_groupTabs) {
-			tgb.te.dump() ;
+			System.out.print(tgb.rowNumber + "\t");
+			System.out.println(tgb.te);
 		}
 	}
 
@@ -64,10 +65,9 @@ public class TabSummary2 {
 			currency = c;
 			format = f;
 		}
-
-		public void dump() {
+		@Override public String toString() {
 			final String _SEP = "|" ;
-			System.out.println(fileName + _SEP + groupName + _SEP + currency + _SEP + format + _SEP + coords.toCoordsString()) ;
+			return "[" + this.fileName + _SEP + this.groupName + _SEP + this.currency + _SEP + this.format + _SEP + coords.toCoordsString() + "]";
 		}
 	}
 }

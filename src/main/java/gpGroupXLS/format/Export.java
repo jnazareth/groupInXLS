@@ -1,11 +1,6 @@
 package gpGroupXLS.format;
 
 import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Collections;
 
 public class Export {
     public interface XLSHeaders {
@@ -48,10 +43,7 @@ public class Export {
     public RowLayout header0   = new RowLayout();
     public RowLayout header1   = new RowLayout();
 
-	public void buildHeaders(String group) {
-		// temp, mock data
-		final int numPersons = 4 ;
-
+	public void buildHeaders(int numPersons) {
         header0.empty();
         header1.empty();
 

@@ -10,9 +10,9 @@ import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import gpGroupXLS.xchg.ExchangeRateTable2;
-import gpGroupXLS.xchg.ExchangeRateTable2.exchangePair;
-import gpGroupXLS.xchg.ExchangeRateTable2.targetCurrencies;
+import gpGroupXLS.xchg.ExchangeRateTable;
+import gpGroupXLS.xchg.ExchangeRateTable.exchangePair;
+import gpGroupXLS.xchg.ExchangeRateTable.targetCurrencies;
 
 public class XRateGrid {
 	private CellReference addXRSheet(XSSFWorkbook workBookGroup, String[][] arrayRates) {
@@ -34,27 +34,6 @@ public class XRateGrid {
 			e.printStackTrace();
 		}
 		return null ;
-	}
-
-	private void dumprates(String[][] a){
-		for (int i = 0; i < a.length ; i++) {
-			for (int j = 0; j < a[i].length; j++) {
-				System.out.println("[" + i + "][" + j + "]:" + a[i][j]) ;
-			}
-		}
-	}
-
-	private String[][] transpose(String[][] array) {
-		if (array == null || array.length == 0) return array;
-		int width = array.length;
-		int height = array[0].length;
-		String[][] arrayTransposed = new String[height][width];
-		for (int x = 0; x < width; x++) {
-			for (int y = 0; y < height; y++) {
-				arrayTransposed[y][x] = array[x][y];
-			}
-		}
-		return arrayTransposed;
 	}
 
 	private void dumpXRates(String [][] xr){
@@ -85,8 +64,8 @@ public class XRateGrid {
 			final String _sFromTo = "from (C) | to (R)" ;
 			final String _sDate = "date" ;
 
-			ExchangeRateTable2 ert2 = tg.m_xTable;
-			LinkedHashMap<String, targetCurrencies> tGrid = ert2.m_targetGrid;
+			ExchangeRateTable ert = tg.m_xTable;
+			LinkedHashMap<String, targetCurrencies> tGrid = ert.m_targetGrid;
 			int m = tGrid.entrySet().size();
 			int n = 0;
 			for (Map.Entry<String, targetCurrencies> tC : tGrid.entrySet()) {
@@ -103,8 +82,8 @@ public class XRateGrid {
 			ArrayList<String> aColR = new ArrayList<String>(c);
 			ArrayList<String> aColD = new ArrayList<String>(c);
 
-			ert2 = tg.m_xTable;
-			tGrid = ert2.m_targetGrid;
+			ert = tg.m_xTable;
+			tGrid = ert.m_targetGrid;
 
 			boolean bColHeader = true, bCurHeader = true ;
 			int j = 0;
@@ -144,70 +123,6 @@ public class XRateGrid {
 		return null;
 	}
 
-	private String[][] buildratesArrayGrid(tabGroup tg) {
-		try {
-			final String _sFromTo = "from (C) | to (R)" ;
-
-			ExchangeRateTable2 ert2 = tg.m_xTable;
-			LinkedHashMap<String, targetCurrencies> tGrid = ert2.m_targetGrid;
-			int m = tGrid.entrySet().size();
-			int n = 0;
-			for (Map.Entry<String, targetCurrencies> tC : tGrid.entrySet()) {
-				String toCurrency = tC.getKey();
-				targetCurrencies fCs = tC.getValue();
-				n = fCs.m_targetRates.size();
-			}
-			String[][] xratesGrid = new String[m+1][n+1];
-			ArrayList<String> aRow = new ArrayList<String>(n+1);
-			ArrayList<String> aCol = new ArrayList<String>(m+1);
-
-			ert2 = tg.m_xTable;
-			tGrid = ert2.m_targetGrid;
-			int r = 0 ;
-			boolean bRowHeader = true ;
-			for (Map.Entry<String, targetCurrencies> tC : tGrid.entrySet()) {
-				//String toCurrency = tC.getKey();
-				targetCurrencies fCs = tC.getValue();
-
-				aRow.clear();
-				//aRow.add(toCurrency);
-				boolean bColHeader = true;
-				aCol.clear();
-				if (bColHeader) aCol.add(_sFromTo);
-				for (exchangePair ep : fCs.m_targetRates) {
-					if (bColHeader) {
-						aRow.add(ep.toCurrency);
-						bColHeader = false;
-					}
-					aRow.add(String.valueOf(ep.rate));
-					if (bRowHeader) {
-						aCol.add(ep.fromCurrency);
-					}
-				}
-				if (bRowHeader) {
-					String[] header = new String[aCol.size()];
-					xratesGrid[r] = aCol.toArray(header);
-					bRowHeader = false;
-					r++ ;
-				}
-				String[] arates = new String[aRow.size()];
-				xratesGrid[r] = aRow.toArray(arates);
-				r++ ;
-			}
-			//System.out.println("before:") ;
-			//dumpXRates(xratesGrid);
-
-			xratesGrid = transpose(xratesGrid);
-
-			//System.out.println("after:") ;
-			//dumpXRates(xratesGrid);
-			return xratesGrid;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
 	private CellReference addXRateSheet2(XSSFWorkbook workBookGroup, tabGroup tg) {
 		try {
 			String[][] arrayRates = buildratesArrayGrid2(tg);
@@ -231,7 +146,7 @@ public class XRateGrid {
 			CellReference cr = addXRateSheet2(workBookGroup, tg) ;
 			if (cr == null) return ;
 
-			ExchangeRateTable2 ert2 = tg.m_xTable;
+			ExchangeRateTable ert2 = tg.m_xTable;
 			ert2.buildRateReferenceGrid(cr);
 		} catch (Exception e) {
 			e.printStackTrace();

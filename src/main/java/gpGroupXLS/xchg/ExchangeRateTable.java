@@ -8,18 +8,12 @@ import java.util.Map;
 
 import org.apache.poi.ss.util.CellReference;
 
-public class ExchangeRateTable2 {
+public class ExchangeRateTable {
 	public LinkedHashMap<String, targetCurrencies> m_targetGrid;
 
 	private String m_SheetName = "" ;
 	private ArrayList<Integer> rowRefIndex = new ArrayList<Integer>() ;
 	private ArrayList<Integer> colRefIndex = new ArrayList<Integer>() ;
-
-	public void addRates(String[] fC, String tC, String[] rates, String format) {
-		if (m_targetGrid == null) m_targetGrid = new LinkedHashMap<String, targetCurrencies>();
-		targetCurrencies tCur = new targetCurrencies(fC, tC, rates, format);
-		m_targetGrid.put(tC, tCur);
-	}
 
 	public void addRates2(String[] fC, String tC, String format, RateDate[] rd) {
 		if (m_targetGrid == null) m_targetGrid = new LinkedHashMap<String, targetCurrencies>();
@@ -126,13 +120,11 @@ public class ExchangeRateTable2 {
 	public class exchangePair {
 		public String	fromCurrency ;	// = groupTabs.tabEntry.currency + ":" + targetGrid.key
 		public String	toCurrency ;	// = groupTabs.tabEntry.currency + ":" + targetGrid.key
-		public Double	rate;
 		public RateDate	rd ;
 
 		public exchangePair(String fC, String tC, Double r) {
 			fromCurrency = fC;
 			toCurrency = tC ;
-			rate = r ;
 			rd = null;
 		}
 
@@ -140,12 +132,11 @@ public class ExchangeRateTable2 {
 			fromCurrency = fC;
 			toCurrency = tC ;
 			rd = new RateDate(r, d) ;
-			rate = 0.0D;
 		}
 
 		@Override public String toString() {
 			final String _SEP = "|" ;
-			return "exchangePair [" + this.fromCurrency + _SEP + this.toCurrency + _SEP + this.rate + _SEP + this.rd.toString() + "]";
+			return "exchangePair [" + this.fromCurrency + _SEP + this.toCurrency + _SEP + this.rd.toString() + "]";
 		}
 	}
 

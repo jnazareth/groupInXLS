@@ -13,11 +13,9 @@ import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import gpGroupXLS.format.Export;
-import gpGroupXLS.format.Export.RowLayout;
-import gpGroupXLS.tabs.TabSummary2;
-import gpGroupXLS.tabs.TabSummary2.tabEntry2;
-import gpGroupXLS.tabs.TabSummary2.tabGroupBase;
+import gpGroupXLS.tabs.TabSummary;
+import gpGroupXLS.tabs.TabSummary.tabEntry2;
+import gpGroupXLS.tabs.TabSummary.tabGroupBase;
 
 public class BaseGrid {
 	private int locateSourceRow(XSSFSheet sheet) {
@@ -108,6 +106,7 @@ public class BaseGrid {
 				int lastColumn = rowitr.getLastCellNum() ;
 				// _newFormatting 4/22
 				for (int col = (XLSProperties._numberToSkip - XLSProperties._groupNameColOffset); col < lastColumn; col++) {
+
 					// _newFormatting 4/22
 					// col to add group name
 					if (col == (XLSProperties._numberToSkip - XLSProperties._groupNameColOffset)) {
@@ -163,10 +162,10 @@ public class BaseGrid {
 	public void buildBaseGrid(XSSFWorkbook workBookGroup, tabGroup tg) {
 		try {
 			XSSFWorkbook workBookIn = null;
-			TabSummary2 ts2 = tg.m_tabSummary ;
+			TabSummary ts = tg.m_tabSummary ;
 
 			boolean bFirst = true ;
-			for (tabGroupBase tgb : ts2.m_groupTabs) {
+			for (tabGroupBase tgb : ts.m_groupTabs) {
 				tabEntry2 gItem = tgb.te;
 				File fIn = new File(gItem.fileName);
 				FileInputStream fileIn = new FileInputStream(fIn);

@@ -1,6 +1,6 @@
 package gpGroupXLS;
 
-import gpGroupXLS.group.groupXLS2;
+import gpGroupXLS.group.groupXLS;
 
 
 public class gpGroupInXLS {
@@ -28,7 +28,7 @@ public class gpGroupInXLS {
 				}
 			}
 
-			groupXLS2 grpXLS = new groupXLS2() ;
+			groupXLS grpXLS = new groupXLS() ;
 			grpXLS.ReadXLSBuildGroup2(configJSON, xlsGroupFile) ;
 		} catch (Exception e) {
 			e.printStackTrace();

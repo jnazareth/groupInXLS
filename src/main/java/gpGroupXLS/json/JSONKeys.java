@@ -8,6 +8,7 @@ public interface JSONKeys {
 	final String keyCurrency 			= "currency" ;
 	final String keyFormat 				= "format" ;
 	final String keySumColumns 			= "sumColumns" ;
+	final String keyNumPersons 			= "numPersons" ;
 	final String keyTargetCurrrencies	= "targetCurrrencies" ;
 	final String keyRates 				= "rates" ;
 	final String keyRate 				= "rate" ;

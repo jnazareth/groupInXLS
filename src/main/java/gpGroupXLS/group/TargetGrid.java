@@ -16,10 +16,10 @@ import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import gpGroupXLS.tabs.TabSummary2;
-import gpGroupXLS.xchg.ExchangeRateTable2;
-import gpGroupXLS.xchg.ExchangeRateTable2.exchangePair;
-import gpGroupXLS.xchg.ExchangeRateTable2.targetCurrencies;
+import gpGroupXLS.tabs.TabSummary;
+import gpGroupXLS.xchg.ExchangeRateTable;
+import gpGroupXLS.xchg.ExchangeRateTable.exchangePair;
+import gpGroupXLS.xchg.ExchangeRateTable.targetCurrencies;
 import gpGroupXLS.xls._Coordinates;
 
 public class TargetGrid {
@@ -30,7 +30,6 @@ public class TargetGrid {
 		sumColumn.retainAll(sumCoords);
 		return sumColumn ;
     }
-
 
 	// [C13:C24] -> [C1:C12]		// adjusted by numberToSkip
 	private _Coordinates adjustSumColumns(_Coordinates cd) {
@@ -107,7 +106,7 @@ public class TargetGrid {
 		groupRows(sheetSummary, rF, rT) ;
 	}
 
-	private int buildExchangeGroup2(XSSFWorkbook wbSummary, String toCurrency, int sourceRow, Double rate, String rateReference, String format) {
+	private int buildExchangeGroup2(XSSFWorkbook wbSummary, String toCurrency, int sourceRow, String rateReference, String format) {
 		int rowAdded = -1 ;
 		XSSFSheet sheetSummary = wbSummary.getSheet(XLSProperties._SummarySheetName) ;
 		if (sheetSummary == null) return rowAdded;
@@ -140,7 +139,6 @@ public class TargetGrid {
 					case NUMERIC:
 						Double d = celldata.getNumericCellValue() ;
 						cellTarget = newRow.createCell(col);
-						//cellTarget.setCellValue(d * rate);	// apply rate
 
 						CellReference cS = new CellReference(celldata) ;
 						CellReference xR = new CellReference(rateReference);
@@ -160,8 +158,8 @@ public class TargetGrid {
 
 	public void buildTargetGrid(XSSFWorkbook workBookGroup, tabGroup tg) {
 		try {
-			ExchangeRateTable2 ert2 = tg.m_xTable;
-			LinkedHashMap<String, targetCurrencies> tGrid = ert2.m_targetGrid;
+			ExchangeRateTable ert = tg.m_xTable;
+			LinkedHashMap<String, targetCurrencies> tGrid = ert.m_targetGrid;
 
 			int r = 0 ;
 			for (Map.Entry<String, targetCurrencies> tC : tGrid.entrySet()) {
@@ -175,14 +173,13 @@ public class TargetGrid {
 				String cFormat = tCs.m_CurrencyInfo.getCurrencyFormat(toCurrency);
 				ArrayList<exchangePair> tR = tCs.m_targetRates;
 				for (int i = 0; i < tR.size(); i++) {
-					Double rate = tR.get(i).rate;
 					String fromCurrency = tR.get(i).fromCurrency ;
-					String rateReference = ert2.getRateReference(i, r) ;
+					String rateReference = ert.getRateReference(i, r) ;
 
-					TabSummary2 ts2 = tg.m_tabSummary ;
-					int row = ts2.m_groupTabs.get(i).rowNumber;
+					TabSummary ts = tg.m_tabSummary ;
+					int row = ts.m_groupTabs.get(i).rowNumber;
 					if (row != -1) {
-						int rA = buildExchangeGroup2(workBookGroup, toCurrency, row, rate, rateReference, cFormat) ;
+						int rA = buildExchangeGroup2(workBookGroup, toCurrency, row, rateReference, cFormat) ;
 						if (rA != -1) rowsAdded.add(rA) ;
 					}
 				}

@@ -1,0 +1,80 @@
+LinkedHashSet<tabEntry>
+	file
+	group
+	currency
+	rate ?
+	xcurrency ?
+	format
+
+	n entries
+	fileName | groupName | currency | format
+	nox.xls | nov.eur | eur | ""
+	nox.xls | nov.gbp | gbp | ""
+	nox.xls | nov.usd | usd | ""
+	nox.xls | nov.gbp | gbp | ""
+	nox.xls | nov.inr | inr | ""
+	nox.xls | nov.inr | inr | ""
+	
+targetCurrency
+	n rates
+	
+	HashMap<String, LinkedHashSet<Double>>
+	
+	frC toC rate	String|String|Double
+	
+	eur	eur:eur		usd	eur:usd		mad	eur:mad
+		gbp:eur			gbp:usd			gbp:mad
+		usd:eur			usd:usd			usd:mad
+		inr:eur			inr:usd			inr:mad
+		inr:eur			inr:usd			inr:mad
+
+	
+	ArrayList<tabGroupBase>	groupTabs
+			0 = eur
+			1 = gbp
+			2 = usd
+			3 = gbp
+			4 = inr
+			5 = inr
+	
+	int rowNumber
+	
+	class tabGroupBase
+		tabEntry	te		// read from inupt
+		int		rowNumber	// populate once added to XLS
+	
+	HashMap<String, ArrayList<exchangePair>>	targetGrid
+		exchangePair
+			String	currPair = groupTabs.tabEntry.currency + ":" + targetGrid.key
+			Double	rate
+	
+		eur	0 = eur:eur
+			1 = gbp:eur
+			2 = usd:eur
+			3 = gbp:eur
+			4 = inr:eur
+			5 = inr:eur
+		usd	0 = eur:usd
+			1 = gbp:usd
+			2 = usd:usd
+			3 = gbp:usd
+			4 = inr:usd
+			5 = inr:usd
+		mad	0 = eur:mad
+			1 = gbp:mad
+			2 = usd:mad
+			3 = gbp:mad
+			4 = inr:mad
+			5 = inr:mad
+			
+____________________________________
+processing:
+	1. read tabs info from input
+	2. populate XLS
+	3. add row number of tabEntry to class (need this to pull exchange rates)
+	4. read targetCurrent list
+	5. add target currency block (for each currency in block)
+		a. for each row in tabEntry (see rownumber from 3)
+		b. use ArrayList.index
+		c. use exchange rate from targetGrid.rate (same ArrayList.index from b)
+

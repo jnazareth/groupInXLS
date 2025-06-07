@@ -1,0 +1,35 @@
+{
+  "groupTabs": [
+    {
+      "filename": "goa.ffv.csv.xlsx",
+      "groupname": "moira.nazareth.inr.goa",
+      "currency": "inr",
+      "format": "[$INR] #,##0.00_);[Red]([$INR] #,##0.00)",
+    },
+    {
+      "filename": "attorneys.goa.ffv.csv.xlsx",
+      "groupname": "moira.nazareth.usd.goa",
+      "currency": "usd",
+      "format": "_($* #,##0.00_);_($* (#,##0.00);_($* \"-\"??_);_(@_)"
+    }
+  ],
+  "sumColumns": "[C13:C24]",
+  "targetCurrrencies": [
+    {
+      "currency": "usd",
+      "format": "_($* #,##0.00_);_($* (#,##0.00);_($* \"-\"??_);_(@_)",
+      "rates": [
+        "0.01200876",
+        "1"
+      ]
+    },
+    {
+      "currency": "inr",
+      "format": "[$INR] #,##0.00_);[Red]([$INR] #,##0.00)",
+      "rates": [
+        "1",
+        "80.11536613"
+      ]
+    }
+  ]
+}

@@ -16,7 +16,7 @@ import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import gpGroupXLS.tabs.TabSummary;
+import gpGroupXLS.tabs.TabSummary2;
 import gpGroupXLS.xchg.ExchangeRateTable;
 import gpGroupXLS.xchg.ExchangeRateTable.exchangePair;
 import gpGroupXLS.xchg.ExchangeRateTable.targetCurrencies;
@@ -176,7 +176,7 @@ public class TargetGrid {
 					String fromCurrency = tR.get(i).fromCurrency ;
 					String rateReference = ert.getRateReference(i, r) ;
 
-					TabSummary ts = tg.m_tabSummary ;
+					TabSummary2 ts = tg.m_tabSummary ;
 					int row = ts.m_groupTabs.get(i).rowNumber;
 					if (row != -1) {
 						int rA = buildExchangeGroup2(workBookGroup, toCurrency, row, rateReference, cFormat) ;

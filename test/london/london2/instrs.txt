@@ -1,0 +1,26 @@
+// 1 final, clean "out" dir
+java -jar ../../../bin/gp3.0.1.jar london.ffv.csv -x -Pdir=out
+
+// 1.1 final, clean "out" dir
+java -jar ../../../bin/gp3.0.1.jar london.ffv.csv -x -Pdir=out -Fjson=false -Pclean
+
+// 2 build group XLS
+java -jar ../../../target/gpGroupInXLS2.1.jar london.summary.json london.summary.xlsx
+
+// 3 update annual XLS
+java -jar ../../../bin/gpTemplate.jar london.ffv.csv.xlsx  ../../../annuals/2024/"Annual 2024.xlsx"
+
+// 3.1 update annual XLS, with json exclusion
+java -jar ../../../bin/gpTemplate.jar london.exclude.json nov.ffv.csv.xlsx ../../../../annuals/2024/"Annual 2024.xlsx"
+
+
+// rates
+05/26/2024
+gbp -> usd	{ "rate": "1.26645",	"date": "05/26/2024" }
+usd -> gbp	{ "rate": "0.789609",	"date": "05/26/2024" }
+
+7/9/2024
+gbp -> usd	{ "rate": "1.281751",	"date": "7/9/2024" }
+usd -> gbp	{ "rate": "0.780183",	"date": "7/9/2024" }
+
+

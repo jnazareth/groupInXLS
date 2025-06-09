@@ -13,9 +13,9 @@ import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import gpGroupXLS.tabs.TabSummary;
-import gpGroupXLS.tabs.TabSummary.tabEntry2;
-import gpGroupXLS.tabs.TabSummary.tabGroupBase;
+import gpGroupXLS.tabs.TabSummary2;
+import gpGroupXLS.tabs.TabSummary2.tabEntry2;
+import gpGroupXLS.tabs.TabSummary2.tabGroupBase;
 
 public class BaseGrid {
 	private int locateSourceRow(XSSFSheet sheet) {
@@ -162,7 +162,7 @@ public class BaseGrid {
 	public void buildBaseGrid(XSSFWorkbook workBookGroup, tabGroup tg) {
 		try {
 			XSSFWorkbook workBookIn = null;
-			TabSummary ts = tg.m_tabSummary ;
+			TabSummary2 ts = tg.m_tabSummary ;
 
 			boolean bFirst = true ;
 			for (tabGroupBase tgb : ts.m_groupTabs) {

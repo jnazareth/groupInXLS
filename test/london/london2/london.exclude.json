@@ -1,0 +1,22 @@
+{
+	"groupexclusions": [
+	{
+		"groupname": "london.usd",
+		"namestoexclude": [
+			"cy"
+		]
+	},
+	{
+		"groupname": "london.gbp",
+		"namestoexclude": [
+			"cy"
+		]
+	},
+	{
+		"groupname": "chetan",
+		"namestoexclude": [
+			"cy"
+		]
+	}
+  ]
+}

@@ -1,7 +1,7 @@
 package gpGroupXLS.json;
 
 import gpGroupXLS.utils.fileUtils;
-import gpGroupXLS.tabs.TabSummary;
+import gpGroupXLS.tabs.TabSummary2;
 import gpGroupXLS.xchg.ExchangeRateTable;
 import gpGroupXLS.xchg.ExchangeRateTable.RateDate;
 import gpGroupXLS.group.tabGroup;
@@ -35,7 +35,7 @@ public class ReadJson {
 				System.out.println("value: " + keys.next());
 			}*/
 
-			TabSummary ts = new TabSummary() ;
+			TabSummary2 ts = new TabSummary2() ;
 			ts.setXLSFileName(xlsGroupFile) ;
 
 			String cd  = (String) jo.get(JSONKeys.keySumColumns);

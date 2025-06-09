@@ -1,0 +1,44 @@
+{
+	"groupTabs": [
+	{
+		"filename": "london.ffv.csv.xlsx",
+		"groupname": "london.usd",
+		"currency": "usd",
+		"format": "_($* #,##0.00_);_($* (#,##0.00);_($* \"-\"??_);_(@_)"
+	},
+	{
+		"filename": "london.ffv.csv.xlsx",
+		"groupname": "london.gbp",
+		"currency": "gbp",
+     	"format": "[$GBP] #,##0.00_);[Red]([$GBP] #,##0.00)"
+	},
+	{
+		"filename": "nov.ffv.csv.xlsx",
+		"groupname": "chetan",
+		"currency": "usd",
+		"format": "_($* #,##0.00_);_($* (#,##0.00);_($* \"-\"??_);_(@_)"
+	}
+	],
+	"sumColumns": "[C9:C16]",
+	"numPersons":3,
+	"targetCurrrencies": [
+		{
+			"currency": "usd",
+			"format": "_($* #,##0.00_);_($* (#,##0.00);_($* \"-\"??_);_(@_)",
+			"rates": [
+				{ "rate": "1.0",		"date": "7/9/2024" },
+				{ "rate": "1.281751",	"date": "7/9/2024" },
+				{ "rate": "1.0",		"date": "12/2/2024" }
+			]
+		},
+		{
+			"currency": "gbp",
+      		"format": "[$GBP] #,##0.00_);[Red]([$GBP] #,##0.00)",
+			"rates": [
+				{ "rate": "0.780183",	"date": "7/9/2024" },
+				{ "rate": "1.0",		"date": "7/9/2024" },
+				{ "rate": "0.7894",		"date": "12/2/2024" }
+			]
+		}
+	]
+}

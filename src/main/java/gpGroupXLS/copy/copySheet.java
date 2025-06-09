@@ -19,9 +19,9 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import gpGroupXLS.group.XLSProperties;
 import gpGroupXLS.group.tabGroup;
-import gpGroupXLS.tabs.TabSummary;
-import gpGroupXLS.tabs.TabSummary.tabEntry2;
-import gpGroupXLS.tabs.TabSummary.tabGroupBase;
+import gpGroupXLS.tabs.TabSummary2;
+import gpGroupXLS.tabs.TabSummary2.tabEntry2;
+import gpGroupXLS.tabs.TabSummary2.tabGroupBase;
 
 public class copySheet {
     public copySheet() {
@@ -139,7 +139,7 @@ public class copySheet {
 	public void buildCopySheets(XSSFWorkbook workBookGroup, tabGroup tg) {
 		try {
 			XSSFWorkbook workBookIn = null;
-			TabSummary ts = tg.m_tabSummary ;
+			TabSummary2 ts = tg.m_tabSummary ;
 			for (tabGroupBase tgb : ts.m_groupTabs) {
 				tabEntry2 gItem = tgb.te;
 				File fIn = new File(gItem.fileName);

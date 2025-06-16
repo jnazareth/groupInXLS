@@ -1,157 +1,175 @@
 package gpGroupXLS.xchg;
 
-import gpGroupXLS.currency.currencyInfo;
-
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.poi.ss.util.CellReference;
 
+import gpGroupXLS.currency.CurrencyInfo;
+
 public class ExchangeRateTable {
-	public LinkedHashMap<String, targetCurrencies> m_targetGrid;
+    private LinkedHashMap<String, TargetCurrencies> targetGrid = new LinkedHashMap<>();
+    private String sheetName = "";
+    private List<Integer> rowRefIndex = new ArrayList<>();
+    private List<Integer> colRefIndex = new ArrayList<>();
 
-	private String m_SheetName = "" ;
-	private ArrayList<Integer> rowRefIndex = new ArrayList<Integer>() ;
-	private ArrayList<Integer> colRefIndex = new ArrayList<Integer>() ;
+    public void addRates(String[] fromCurrencies, String toCurrency, String format, RateDate[] rateDates) {
+        TargetCurrencies targetCurrencies = new TargetCurrencies(fromCurrencies, toCurrency, format, rateDates);
+        targetGrid.put(toCurrency, targetCurrencies);
+    }
 
-	public void addRates2(String[] fC, String tC, String format, RateDate[] rd) {
-		if (m_targetGrid == null) m_targetGrid = new LinkedHashMap<String, targetCurrencies>();
-		targetCurrencies tCur = new targetCurrencies(fC, tC, format, rd);
-		m_targetGrid.put(tC, tCur);
-	}
+    public void buildRateReferenceGrid(CellReference cellReference) {
+        sheetName = cellReference.getCellRefParts()[0];
+        int startRowReference = Integer.parseInt(cellReference.getCellRefParts()[1]);
+        char startColReference = cellReference.getCellRefParts()[2].charAt(0);
 
-	public void buildRateReferenceGrid(CellReference cr) {
-		m_SheetName = cr.getCellRefParts()[0] ;	// location of "from|to"
-		int startRowReference = Integer.parseInt(cr.getCellRefParts()[1]);	//1;
-		char startColReference = cr.getCellRefParts()[2].charAt(0);	//'A';
+        int row = startRowReference;
+        char col = startColReference;
 
-		int row = startRowReference ;
-		char col = startColReference;
+        boolean rowsAdded = false;
+        for (Map.Entry<String, TargetCurrencies> entry : targetGrid.entrySet()) {
+            TargetCurrencies currencies = entry.getValue();
+            row = startRowReference;
+            col = (char) (col + 1);
+            int colIndex = col;
 
-		boolean bRowsAdded = false ;
-		for (Map.Entry<String, targetCurrencies> tC : m_targetGrid.entrySet()) {
-			String toCurrency = tC.getKey();
+            colRefIndex.add(colIndex);
+            if (!rowsAdded) {
+                for (@SuppressWarnings("unused") ExchangePair pair : currencies.getTargetRates()) {
+                    rowRefIndex.add(++row);
+                }
+                rowsAdded = true;
+            }
+            col = (char) (col + 1);
+        }
+    }
 
-			targetCurrencies fCs = tC.getValue();
-			row = startRowReference ;
-			col = (char) (col + 1);
-			int i = col ;
+    public String getRateReference(int fromCurrencyIndex, int toCurrencyIndex) {
+        int rowIndex = rowRefIndex.get(fromCurrencyIndex);
+        int colIndex = colRefIndex.get(toCurrencyIndex);
+        char colChar = (char) colIndex;
+        return sheetName + "!" + colChar + rowIndex;
+    }
 
-			colRefIndex.add(i) ;
-			if (!bRowsAdded) {
-				for (exchangePair ep : fCs.m_targetRates) {
-					rowRefIndex.add(++row) ;
-					//colRefCurrencies.add(toCurrency) ;
-				}
-				bRowsAdded = true;
-			}
-			col = (char) (col + 1); // enhancement: date added to rate
-		}
-	}
+	public LinkedHashMap<String, TargetCurrencies> getTargetGrid() {
+        return targetGrid;
+    }
 
-	public String getRateReference(int fromCurrency, int toCurrency) {
-		int rRefIndex = rowRefIndex.get(fromCurrency) ;
-		int cRefIndex = colRefIndex.get(toCurrency) ;
-		char c = (char) cRefIndex ;
-		return m_SheetName + "!" + c + rRefIndex  ;	// "Sheet2!A1"
-	}
+    @SuppressWarnings("unused")
+    public void printExchangeRates() {
+        int rowIndex = 0;
+        for (Map.Entry<String, TargetCurrencies> entry : targetGrid.entrySet()) {
+            TargetCurrencies currencies = entry.getValue();
+            int colIndex = 0;
+            for (ExchangePair pair : currencies.getTargetRates()) {
+                String rateReference = getRateReference(colIndex, rowIndex);
+                System.out.println("Rate Reference: " + rateReference);
+                colIndex++;
+            }
+            rowIndex++;
+        }
+    }
 
-	public void getXRates(String sheetName) {
-		int r = 0 ;
-		for (Map.Entry<String, targetCurrencies> tC : m_targetGrid.entrySet()) {
-			String toCurrency = tC.getKey();
-			int c = 0 ;
-			targetCurrencies fCs = tC.getValue();
-			for (exchangePair ep : fCs.m_targetRates) {
-				String xRef = getRateReference(c, r) ;
-				System.out.println("xRef::" + xRef) ;
-				c++ ;
-			}
-			r++ ;
-		}
-	}
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("ExchangeRateTable{");
+        sb.append("sheetName='").append(sheetName).append('\'');
+        sb.append(", targetGrid=").append(targetGrid);
+        sb.append('}');
+        return sb.toString();
+    }
 
-	public void dump() {
-		for (Map.Entry<String, targetCurrencies> tC : m_targetGrid.entrySet()) {
-			String toCurrency = tC.getKey();
-			System.out.println(toCurrency + "::") ;
-			targetCurrencies fCs = tC.getValue();
-			fCs.dump() ;
-		}
-	}
+    public class TargetCurrencies {
+        private List<ExchangePair> targetRates = new ArrayList<>();
+        private CurrencyInfo currencyInfo;
 
-	public class targetCurrencies {
-		public ArrayList<exchangePair> m_targetRates;
-		public currencyInfo m_CurrencyInfo;
+        public TargetCurrencies(String[] fromCurrencies, String toCurrency, String format, RateDate[] rateDates) {
+            if (fromCurrencies.length != rateDates.length) return;
+            for (int i = 0; i < rateDates.length; i++) {
+                ExchangePair pair = new ExchangePair(fromCurrencies[i], toCurrency, rateDates[i].rate, rateDates[i].date);
+                targetRates.add(pair);
+            }
+            currencyInfo = new CurrencyInfo(toCurrency, format);
+        }
 
-		public targetCurrencies(String[] fC, String tC, String[] rates, String format) {
-			if (fC.length != rates.length) return;
-			m_targetRates = new ArrayList<exchangePair>() ;
-			for (int i = 0; i < rates.length; i++) {
-				Double r = Double.parseDouble(rates[i]);
-				String f = fC[i];
-				exchangePair ep = new exchangePair(f, tC, r);
-				boolean b = m_targetRates.add(ep);
-			}
-			m_CurrencyInfo = new currencyInfo(tC, format);
-		}
+        public List<ExchangePair> getTargetRates() {
+            return targetRates;
+        }
 
-		public targetCurrencies(String[] fC, String tC, String format, RateDate[] rd) {
-			if (fC.length != rd.length) return;
-			m_targetRates = new ArrayList<exchangePair>() ;
-			for (int i = 0; i < rd.length; i++) {
-				Double r = rd[i].rate;
-				String d = rd[i].date;
-				String f = fC[i];
-				exchangePair ep = new exchangePair(f, tC, r, d);
-				boolean b = m_targetRates.add(ep);
-			}
-			m_CurrencyInfo = new currencyInfo(tC, format);
+		public CurrencyInfo getCurrencyInfo() {
+			return currencyInfo;
 		}
 
-		public void dump() {
-			for (exchangePair ep : m_targetRates) {
-				System.out.println(ep);
-			}
+        @Override
+        public String toString() {
+            StringBuilder sb = new StringBuilder("TargetCurrencies{");
+            sb.append("targetRates=").append(targetRates);
+            sb.append(", currencyInfo=").append(currencyInfo);
+            sb.append('}');
+            return sb.toString();
+        }
+    }
+
+    public class ExchangePair {
+        private String fromCurrency;
+        private String toCurrency;
+        private RateDate rateDate;
+
+        public ExchangePair(String fromCurrency, String toCurrency, Double rate, String date) {
+            this.fromCurrency = fromCurrency;
+            this.toCurrency = toCurrency;
+            this.rateDate = new RateDate(rate, date);
+        }
+
+		public String getFromCurrency() {
+			return fromCurrency;
 		}
-	}
 
-	public class exchangePair {
-		public String	fromCurrency ;	// = groupTabs.tabEntry.currency + ":" + targetGrid.key
-		public String	toCurrency ;	// = groupTabs.tabEntry.currency + ":" + targetGrid.key
-		public RateDate	rd ;
-
-		public exchangePair(String fC, String tC, Double r) {
-			fromCurrency = fC;
-			toCurrency = tC ;
-			rd = null;
+		public String getToCurrency() {
+			return toCurrency;
 		}
 
-		public exchangePair(String fC, String tC, Double r, String d) {
-			fromCurrency = fC;
-			toCurrency = tC ;
-			rd = new RateDate(r, d) ;
+		public RateDate getRateDate() {
+			return rateDate;
 		}
 
-		@Override public String toString() {
-			final String _SEP = "|" ;
-			return "exchangePair [" + this.fromCurrency + _SEP + this.toCurrency + _SEP + this.rd.toString() + "]";
-		}
-	}
+        @Override
+        public String toString() {
+            StringBuilder sb = new StringBuilder("ExchangePair{");
+            sb.append("fromCurrency='").append(fromCurrency).append('\'');
+            sb.append(", toCurrency='").append(toCurrency).append('\'');
+            sb.append(", rateDate=").append(rateDate);
+            sb.append('}');
+            return sb.toString();
+        }
+    }
 
-	public class RateDate {
-		public Double	rate;
-		public String 	date;
-	
-		public RateDate(Double r, String d) {
-			rate = r ;
-			date = d ;
-		}		
+    public class RateDate {
+        private Double rate;
+        private String date;
 
-		@Override public String toString() {
-			final String _SEP = "|" ;
-			return "RateDate [" + this.rate + _SEP + this.date + "]";
+        public RateDate(Double rate, String date) {
+            this.rate = rate;
+            this.date = date;
+        }
+
+		public Double getRate() {
+ 		  return rate;
 		}
-	}
+
+		public String getDate() {
+			return date;
+		}
+
+        @Override
+        public String toString() {
+            StringBuilder sb = new StringBuilder("RateDate{");
+            sb.append("rate=").append(rate);
+            sb.append(", date='").append(date).append('\'');
+            sb.append('}');
+            return sb.toString();
+        }
+    }
 }

@@ -71,6 +71,7 @@ public class _Coordinates {
         return aRange;
     }
 
+    @SuppressWarnings("unused")
     private boolean cellInRange(int n) {
         if (_range == null) return false ;
         return _range.contains(n) ;
@@ -81,10 +82,21 @@ public class _Coordinates {
 		int first = arr[0].intValue();
 		int last = arr[arr.length - 1].intValue();
 
-		return (sLeftBr + sColumn + first + sRange + sColumn + last + sRightBr) ;
+        StringBuilder sb = new StringBuilder();
+        sb.append(sLeftBr)
+          .append(sColumn)
+          .append(first)
+          .append(sRange)
+          .append(sColumn)
+          .append(last)
+          .append(sRightBr);
+        return sb.toString();
 	}
 
-	@Override public String toString() {
-		return "_Coordinates [" + toCoordsString() + "]";
+	@Override 
+    public String toString() {
+        StringBuilder sb = new StringBuilder("_Coordinates [");
+        sb.append(toCoordsString()).append("]");
+        return sb.toString();
 	}
 }

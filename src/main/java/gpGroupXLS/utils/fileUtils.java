@@ -1,36 +1,38 @@
 package gpGroupXLS.utils;
 
 import java.io.File;
-import java.io.FileInputStream ;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import org.apache.commons.io.FileUtils ;
+import org.apache.commons.io.FileUtils;
 
 public class fileUtils {
-	public static File getFile(String fileName)
-	throws FileNotFoundException
-	{
-		File aFile = new File(fileName);
-		if (aFile.exists()) return aFile;
-		else throw new FileNotFoundException("File  " + fileName + " does not exist.");
-	}
 
-	public static FileReader getFileReader(String fName) {
-		final String OUT_FOLDER 	= "." ;
+    private static final String DEFAULT_DIRECTORY = ".";
 
-		FileReader fReader = null ;
-		try {
-			String inFilename = fName;
-			String dirToUse = OUT_FOLDER ;
-            File f = new File(dirToUse, inFilename);
-            FileInputStream fiS = FileUtils.openInputStream(f) ;
-            FileReader fr = new FileReader(fiS.getFD()) ;
-            fReader = fr ;
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-		}
-		return fReader ;
-	}
+    public static File getFile(String fileName) throws FileNotFoundException {
+        File file = new File(fileName);
+        if (file.exists()) {
+            return file;
+        } else {
+            throw new FileNotFoundException("File " + fileName + " does not exist.");
+        }
+    }
+
+    public static FileReader getFileReader(String fileName) {
+        try {
+            File file = new File(DEFAULT_DIRECTORY, fileName);
+            FileInputStream fileInputStream = FileUtils.openInputStream(file);
+            return new FileReader(fileInputStream.getFD());
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "FileUtils{}";
+    }
 }

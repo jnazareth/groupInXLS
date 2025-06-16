@@ -1,149 +1,151 @@
 package gpGroupXLS.format;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Export {
+
     public interface XLSHeaders {
-        final String H_TRANSACTION_AMOUNTS	        = "transaction amounts" ;
-        final String H_OWE							= "(you owe) / owed to you" ;
-        final String H_INDIVIDUAL_TOTALS	        = "individual \"spent\"" ;
-        final String H_ITEM							= "Item" ;
-        final String H_CATEGORY						= "Category" ;
-        final String H_VENDOR						= "Vendor" ;
-        final String H_DESCRIPTION					= "Description" ;
-        final String H_AMOUNT						= "Amount" ;
-        final String H_FROM							= "From" ;
-        final String H_TO							= "To" ;
-        final String H_ACTION						= "Action" ;
-        final String H_CHECKSUM_TRANSACTION			= "cs(Transaction)" ;
-        final String H_CHECKSUM_GROUPTOTALS        	= "cs(GroupTotals)" ;
-        final String H_INDIVIDUAL_PAID		        = "individual \"paid\"" ;
-        final String H_CHECKSUM_INDIVIDUALTOTALS	= "cs(IndividualTotals)" ;
+        String TRANSACTION_AMOUNTS = "transaction amounts";
+        String OWE = "(you owe) / owed to you";
+        String INDIVIDUAL_TOTALS = "individual \"spent\"";
+        String ITEM = "Item";
+        String CATEGORY = "Category";
+        String VENDOR = "Vendor";
+        String DESCRIPTION = "Description";
+        String AMOUNT = "Amount";
+        String FROM = "From";
+        String TO = "To";
+        String ACTION = "Action";
+        String CHECKSUM_TRANSACTION = "cs(Transaction)";
+        String CHECKSUM_GROUPTOTALS = "cs(GroupTotals)";
+        String INDIVIDUAL_PAID = "individual \"paid\"";
+        String CHECKSUM_INDIVIDUALTOTALS = "cs(IndividualTotals)";
     }
 
     public interface ExportKeys {
-        final String keyItem                        = "item" ;
-        final String keyCategory                    = "category" ;
-        final String keyVendor                      = "vendor" ;
-        final String keyDescription                 = "description" ;
-        final String keyAmount                      = "amount" ;
-        final String keyFrom                        = "from" ;
-        final String keyTo                          = "to" ;
-        final String keyAction                      = "action" ;
-        final String keyTransactions                = "transactions" ;
-        final String keyOwe                         = "owe" ;
-        final String keyCheckSumTransaction         = "checksumTransaction" ;
-        final String keySpent                       = "spent" ;
-        final String keyCheckSumGroupTotals         = "checksumGroupTotals" ;
-        final String keyPaid                        = "paid" ;
-        final String keyCheckSumIndividualTotals    = "checksumIndividualTotals" ;
+        String ITEM = "item";
+        String CATEGORY = "category";
+        String VENDOR = "vendor";
+        String DESCRIPTION = "description";
+        String AMOUNT = "amount";
+        String FROM = "from";
+        String TO = "to";
+        String ACTION = "action";
+        String TRANSACTIONS = "transactions";
+        String OWE = "owe";
+        String CHECKSUM_TRANSACTION = "checksumTransaction";
+        String SPENT = "spent";
+        String CHECKSUM_GROUPTOTALS = "checksumGroupTotals";
+        String PAID = "paid";
+        String CHECKSUM_INDIVIDUALTOTALS = "checksumIndividualTotals";
     }
 
-    // members
-    public RowLayout header0   = new RowLayout();
-    public RowLayout header1   = new RowLayout();
+    public final RowLayout header0 = new RowLayout();
+    private final RowLayout header1 = new RowLayout();
 
-	public void buildHeaders(int numPersons) {
-        header0.empty();
-        header1.empty();
+    public void buildHeaders(int numPersons) {
+        header0.clear();
+        header1.clear();
 
-        int pos = 1 ;
-		header1.addCell(pos++, ExportKeys.keyItem,      XLSHeaders.H_ITEM) ;
-		header1.addCell(pos++, ExportKeys.keyCategory,  XLSHeaders.H_CATEGORY) ;
-		header1.addCell(pos++, ExportKeys.keyVendor,    XLSHeaders.H_VENDOR) ;
-		header1.addCell(pos++, ExportKeys.keyDescription, XLSHeaders.H_DESCRIPTION) ;
-		header1.addCell(pos++, ExportKeys.keyAmount,    XLSHeaders.H_AMOUNT) ;
-		header1.addCell(pos++, ExportKeys.keyFrom,      XLSHeaders.H_FROM) ;
-		header1.addCell(pos++, ExportKeys.keyTo,        XLSHeaders.H_TO) ;
-		header1.addCell(pos++, ExportKeys.keyAction,    XLSHeaders.H_ACTION) ;
+        int position = 1;
+        header1.addCell(position++, ExportKeys.ITEM, XLSHeaders.ITEM);
+        header1.addCell(position++, ExportKeys.CATEGORY, XLSHeaders.CATEGORY);
+        header1.addCell(position++, ExportKeys.VENDOR, XLSHeaders.VENDOR);
+        header1.addCell(position++, ExportKeys.DESCRIPTION, XLSHeaders.DESCRIPTION);
+        header1.addCell(position++, ExportKeys.AMOUNT, XLSHeaders.AMOUNT);
+        header1.addCell(position++, ExportKeys.FROM, XLSHeaders.FROM);
+        header1.addCell(position++, ExportKeys.TO, XLSHeaders.TO);
+        header1.addCell(position++, ExportKeys.ACTION, XLSHeaders.ACTION);
 
-        header0.addCell(pos, ExportKeys.keyTransactions, XLSHeaders.H_TRANSACTION_AMOUNTS) ;
-	    pos += numPersons ;
-        header0.addCell(pos, ExportKeys.keyOwe, XLSHeaders.H_OWE) ;
-	    pos += numPersons ;
-        header0.addCell(pos, ExportKeys.keySpent, XLSHeaders.H_INDIVIDUAL_TOTALS) ;
-	    pos += numPersons ;
-        header0.addCell(pos, ExportKeys.keyPaid, XLSHeaders.H_INDIVIDUAL_PAID) ;
-
-        //header0.dumpCollection();
+        header0.addCell(position, ExportKeys.TRANSACTIONS, XLSHeaders.TRANSACTION_AMOUNTS);
+        position += numPersons;
+        header0.addCell(position, ExportKeys.OWE, XLSHeaders.OWE);
+        position += numPersons;
+        header0.addCell(position, ExportKeys.SPENT, XLSHeaders.INDIVIDUAL_TOTALS);
+        position += numPersons;
+        header0.addCell(position, ExportKeys.PAID, XLSHeaders.INDIVIDUAL_PAID);
     }
-
-    /*
-     * class RowLayout
-     */
 
     public class RowLayout {
-		ArrayList<CellLayout> m_Cells  = new ArrayList<CellLayout>();
-
-        public RowLayout(RowLayout rl) {
-            for (CellLayout c : rl.m_Cells) {
-                CellLayout cl = rl.getCell(c.xlsPositionName) ;
-                this.addCell(cl.xlsPosition, cl.xlsPositionName, cl.xlsPositionValue) ;
-            }
-        }
+        private final List<CellLayout> cells = new ArrayList<>();
 
         public RowLayout() {
         }
 
-        void addCell(int xlsPos, String xlsKey, String sValue) {
-            CellLayout cl = new CellLayout(xlsPos, xlsKey, sValue) ;
-            m_Cells.add(cl) ;
-        }
-
-        public CellLayout getCell (String posName) {
-            for (CellLayout c : m_Cells) {
-                if (c.xlsPositionName.equalsIgnoreCase(posName)) return c ;
+        public RowLayout(RowLayout other) {
+            for (CellLayout cell : other.cells) {
+                addCell(cell.position, cell.key, cell.value);
             }
-            return null ;
         }
 
-        public CellLayout getCell (int pos) {
-            for (CellLayout c : m_Cells) {
-                if (c.xlsPosition == pos) return c ;
+        public void addCell(int position, String key, String value) {
+            cells.add(new CellLayout(position, key, value));
+        }
+
+        public CellLayout getCell(String key) {
+            return cells.stream()
+                        .filter(cell -> cell.key.equalsIgnoreCase(key))
+                        .findFirst()
+                        .orElse(null);
+        }
+
+        public CellLayout getCell(int position) {
+            return cells.stream()
+                        .filter(cell -> cell.position == position)
+                        .findFirst()
+                        .orElse(null);
+        }
+
+        public CellLayout setValue(int position, String value) {
+            CellLayout cell = getCell(position);
+            if (cell != null) {
+                cell.value = value;
             }
-            return null ;
+            return cell;
         }
 
-        public CellLayout setValue (int i, String v) {
-            CellLayout cl = getCell(i) ;
-            if (cl != null) {
-                cl.xlsPositionValue = v;
-                return cl ;
+        public CellLayout setValue(String key, String value) {
+            CellLayout cell = getCell(key);
+            if (cell != null) {
+                cell.value = value;
             }
-            return null ;
+            return cell;
         }
-        public CellLayout setValue (String posName, String v) {
-            CellLayout cl = getCell(posName) ;
-            if (cl != null) {
-                cl.xlsPositionValue = v;
-                return cl ;
+
+        public int size() {
+            return cells.size();
+        }
+
+        public void clear() {
+            cells.clear();
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            for (CellLayout cell : cells) {
+                sb.append(cell).append("\n");
             }
-            return null ;
-        }
-
-        public int length() {
-            return m_Cells.size();
-        }
-
-        public void empty(){
-            m_Cells.clear();
-        }
-
-        public void dumpCollection() {
-            for (CellLayout c : m_Cells) {
-                System.out.println(c.xlsPosition + "|" + c.xlsPositionName + "|" + c.xlsPositionValue);
-            }
+            return sb.toString();
         }
 
         public class CellLayout {
-            public int		xlsPosition;
-            public String   xlsPositionName;
-            public String	xlsPositionValue;
+            public final int position;
+            private final String key;
+            private String value;
 
-            public CellLayout(int x, String n, String v) {
-                xlsPosition = x;
-                xlsPositionName = n;
-                xlsPositionValue = v;
+            public CellLayout(int position, String key, String value) {
+                this.position = position;
+                this.key = key;
+                this.value = value;
+            }
+
+            @Override
+            public String toString() {
+                StringBuilder sb = new StringBuilder();
+                sb.append(position).append("|").append(key).append("|").append(value);
+                return sb.toString();
             }
         }
     }

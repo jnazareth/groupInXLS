@@ -1,10 +1,12 @@
 package gpGroupXLS;
 
 import org.apache.logging.log4j.LogManager;
-import gpGroupXLS.group.groupXLS2;
+
+import gpGroupXLS.group.GroupXLS2;
 
 class GPThread extends Thread {
-    private static final org.apache.logging.log4j.Logger logger = LogManager.getLogger(GPThread.class);
+    @SuppressWarnings("unused")
+	private static final org.apache.logging.log4j.Logger logger = LogManager.getLogger(GPThread.class);
 
     private final String jsonFile;
     private final String xlsInputFile;
@@ -18,8 +20,8 @@ class GPThread extends Thread {
     // Override the run method
     @Override
     public void run() {
-		groupXLS2 grpXLS = new groupXLS2() ;
-		grpXLS.ReadXLSBuildGroup2(jsonFile, xlsInputFile) ;
+		GroupXLS2 grpXLS = new GroupXLS2();
+		grpXLS.readXLSBuildGroup(jsonFile, xlsInputFile);
 
     }
 }

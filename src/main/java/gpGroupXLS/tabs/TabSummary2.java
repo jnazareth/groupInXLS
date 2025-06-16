@@ -3,80 +3,130 @@ package gpGroupXLS.tabs;
 import gpGroupXLS.xls._Coordinates;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class TabSummary2 {
-	public ArrayList<tabGroupBase>	m_groupTabs = null;
-		String xlsFileName;
-		public _Coordinates coords;
-		int numPersons;
+    private List<TabGroupBase> groupTabs = new ArrayList<>();
+    private String xlsFileName;
+    private _Coordinates coords;
+    private int numPersons;
 
-	public void setXLSFileName(String xFN) {
-		xlsFileName = xFN;
-	}
-	public String getXLSFileName() {
-		return xlsFileName ;
-	}
+    public void setXLSFileName(String xlsFileName) {
+        this.xlsFileName = xlsFileName;
+    }
 
-	public _Coordinates getCoords() {
-		return coords;
-	}
+    public String getXLSFileName() {
+        return xlsFileName;
+    }
 
-	public void setCoords(String cd) {
-		coords = new _Coordinates(cd);
-	}
+    public _Coordinates getCoords() {
+        return coords;
+    }
 
-	public void setNumPersons(int np) {
-		numPersons = np;
-	}
+    public void setCoords(String coordsString) {
+        this.coords = new _Coordinates(coordsString);
+    }
 
-	public int getNumPersons() {
-		return numPersons;
-	}
+    public void setNumPersons(int numPersons) {
+        this.numPersons = numPersons;
+    }
 
-	public ArrayList<tabGroupBase> addItem(String fN, String gN, String c, String f) {
-		tabEntry2 tE = new tabEntry2(fN, gN, c, f) ;
-		tabGroupBase tgb = new tabGroupBase(tE);
-		if (m_groupTabs == null) m_groupTabs = new ArrayList<tabGroupBase>() ;
-		boolean b = m_groupTabs.add(tgb) ;
+    public int getNumPersons() {
+        return numPersons;
+    }
 
-		return m_groupTabs ;
-	}
+    public List<TabGroupBase> addItem(String fileName, String groupName, String currency, String format) {
+        TabEntry2 tabEntry = new TabEntry2(fileName, groupName, currency, format);
+        TabGroupBase tabGroupBase = new TabGroupBase(tabEntry);
+        groupTabs.add(tabGroupBase);
+        return groupTabs;
+    }
 
-	public void dump() {
-		for (tabGroupBase tgb : m_groupTabs) {
-			System.out.print(tgb.rowNumber + "\t");
-			System.out.println(tgb.te);
-		}
-	}
+    public List<TabGroupBase> getGroupTabs() {
+        return groupTabs;
+    }
 
-	public class tabGroupBase {
-		public tabEntry2	te;	// read from input
-		public int	rowNumber;	// populate once added to XLS
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("TabSummary2{");
+        sb.append("xlsFileName='").append(xlsFileName).append('\'');
+        sb.append(", coords=").append(coords.toCoordsString());
+        sb.append(", numPersons=").append(numPersons);
+        sb.append(", groupTabs=").append(groupTabs);
+        sb.append('}');
+        return sb.toString();
+    }
 
-		public tabGroupBase(tabEntry2 t){
-			te = t ;
-			rowNumber = -1 ;
-		}
-	}
+    public class TabGroupBase {
+        private final TabEntry2 tabEntry;
+        private int rowNumber = -1;
 
-	public class tabEntry2 {
-		public String fileName;
-		public String groupName;
-		public String currency;
-		public String format;
+        public TabGroupBase(TabEntry2 tabEntry) {
+            this.tabEntry = tabEntry;
+        }
 
-		public tabEntry2() {
-		}
+        public TabEntry2 getTabEntry() {
+            return tabEntry;
+        }
 
-		public tabEntry2(String fN, String gN, String c, String f) {
-			fileName = fN;
-			groupName = gN;
-			currency = c;
-			format = f;
-		}
-		@Override public String toString() {
-			final String _SEP = "|" ;
-			return "[" + this.fileName + _SEP + this.groupName + _SEP + this.currency + _SEP + this.format + _SEP + coords.toCoordsString() + "]";
-		}
-	}
+        public int getRowNumber() {
+            return rowNumber;
+        }
+
+        public void setRowNumber(int rowNumber) {
+            this.rowNumber = rowNumber;
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder sb = new StringBuilder("TabGroupBase{");
+            sb.append("tabEntry=").append(tabEntry);
+            sb.append(", rowNumber=").append(rowNumber);
+            sb.append('}');
+            return sb.toString();
+        }
+    }
+
+    public class TabEntry2 {
+        private final String fileName;
+        private final String groupName;
+        private final String currency;
+        private final String format;
+
+        public TabEntry2(String fileName, String groupName, String currency, String format) {
+            this.fileName = fileName;
+            this.groupName = groupName;
+            this.currency = currency;
+            this.format = format;
+        }
+
+        public String getFileName() {
+            return fileName;
+        }
+
+        public String getGroupName() {
+            return groupName;
+        }
+
+        public String getCurrency() {
+            return currency;
+        }
+
+        public String getFormat() {
+            return format;
+        }
+
+        @Override
+        public String toString() {
+            final String separator = "|";
+            StringBuilder sb = new StringBuilder("[");
+            sb.append(fileName).append(separator)
+              .append(groupName).append(separator)
+              .append(currency).append(separator)
+              .append(format).append(separator)
+              .append(coords.toCoordsString())
+              .append("]");
+            return sb.toString();
+        }
+    }
 }

@@ -4,100 +4,95 @@ import gpGroupXLS.utils.fileUtils;
 import gpGroupXLS.tabs.TabSummary2;
 import gpGroupXLS.xchg.ExchangeRateTable;
 import gpGroupXLS.xchg.ExchangeRateTable.RateDate;
-import gpGroupXLS.group.tabGroup;
+import gpGroupXLS.group.TabGroup;
 
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import java.util.ArrayList;
-
 public class ReadJson {
-	public tabGroup readJSONConfigFile2(String configFile, String xlsGroupFile) {
-		tabGroup tg = null ;
 
-		JSONParser jsonParser = new JSONParser();
-		try {
-			FileReader reader = fileUtils.getFileReader(configFile) ;
+    public TabGroup readJSONConfigFile(String configFile, String xlsGroupFile) {
+        JSONParser jsonParser = new JSONParser();
 
-			//Read JSON file
-			Object oParser = jsonParser.parse(reader);
-			org.json.simple.JSONObject jo = (org.json.simple.JSONObject) oParser;
+        try (FileReader reader = fileUtils.getFileReader(configFile)) {
+            JSONObject jsonObject = (JSONObject) jsonParser.parse(reader);
 
-			//String fileName  = (String) jo.get(JSONKeys.keyFileName);
-			/*Iterator<String> keys = jo.keySet().iterator();
-			while (keys.hasNext()) {
-				System.out.println("value: " + keys.next());
-			}*/
+			List<String> fCurrencies = new ArrayList<>();
+            TabSummary2 tabSummary = parseTabSummary(jsonObject, xlsGroupFile, fCurrencies);
+            ExchangeRateTable exchangeRateTable = parseExchangeRateTable(jsonObject, tabSummary, fCurrencies);
 
-			TabSummary2 ts = new TabSummary2() ;
-			ts.setXLSFileName(xlsGroupFile) ;
+            //System.out.println("readJSONConfigFile::" + exchangeRateTable);
 
-			String cd  = (String) jo.get(JSONKeys.keySumColumns);
-			ts.setCoords(cd) ;
+            return new TabGroup(tabSummary, exchangeRateTable);
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
-			long np = (long) jo.get(JSONKeys.keyNumPersons);
-			ts.setNumPersons(Long.valueOf(np).intValue());
+    private TabSummary2 parseTabSummary(JSONObject jsonObject, String xlsGroupFile, List<String> fCurrencies) {
+        TabSummary2 tabSummary = new TabSummary2();
+        tabSummary.setXLSFileName(xlsGroupFile);
 
-			JSONArray joGroupTabs ;
-			joGroupTabs = (JSONArray)jo.get(JSONKeys.keyGrouptabs);
-			ArrayList<String> fCurrencies = new ArrayList<String>(joGroupTabs.size()) ;
-			for (int i = 0; i < joGroupTabs.size(); i++) {
-				JSONObject item = (JSONObject)joGroupTabs.get(i);
-				String fName = (String)item.get(JSONKeys.keyFileName);
-				String gName = (String)item.get(JSONKeys.keyGroupName);
-				String fCur = (String)item.get(JSONKeys.keyCurrency);
-				String sFormat = (String)item.get(JSONKeys.keyFormat);
-				//System.out.println("fName:" + fName + "\t\tgName:" + gName + "\t\tsCurrency:" + fCur + "\t\tsFormat:" + sFormat + "\t\tsSumColumns:" + sSumColumns);
+        String sumColumns = (String) jsonObject.get(JSONKeys.SUM_COLUMNS);
+        tabSummary.setCoords(sumColumns);
 
-				fCurrencies.add(fCur) ;
-				ts.addItem(fName, gName, fCur, sFormat) ;
-			}
-			//ts.dump() ;
+        long numPersons = (long) jsonObject.get(JSONKeys.NUM_PERSONS);
+        tabSummary.setNumPersons((int) numPersons);
 
-			ExchangeRateTable ert = new ExchangeRateTable();
-			JSONArray joTargetCurrrencies ;
-			joTargetCurrrencies = (JSONArray)jo.get(JSONKeys.keyTargetCurrrencies);
-			for (int i = 0; i < joTargetCurrrencies.size(); i++) {
-				JSONObject item = (JSONObject)joTargetCurrrencies.get(i);
-				String toCurrency = (String)item.get(JSONKeys.keyCurrency);
-				String sFormat = (String)item.get(JSONKeys.keyFormat);
-				//System.out.println("toCurrency:" + toCurrency + "\t\tsFormat:" + sFormat);
+        JSONArray groupTabs = (JSONArray) jsonObject.get(JSONKeys.GROUP_TABS);
 
-				JSONArray joRates ;
-				joRates = (JSONArray)item.get(JSONKeys.keyRates);
-				RateDate[] rd = new RateDate[joRates.size()] ;
-				for (int j = 0; j < joRates.size(); j++) {
-					JSONObject rateItem = (JSONObject)joRates.get(j);
-					String rate = (String)rateItem.get(JSONKeys.keyRate);
-					String date = (String)rateItem.get(JSONKeys.keyDate);
-					rd[j] = ert.new RateDate(Double.parseDouble(rate), date);
-				}
+        for (Object obj : groupTabs) {
+            JSONObject item = (JSONObject) obj;
+            String fileName = (String) item.get(JSONKeys.FILE_NAME);
+            String groupName = (String) item.get(JSONKeys.GROUP_NAME);
+            String currency = (String) item.get(JSONKeys.CURRENCY);
+            String format = (String) item.get(JSONKeys.FORMAT);
 
-				String[] fromCurrency = new String[fCurrencies.size()];
-				fromCurrency = fCurrencies.toArray(fromCurrency) ;
+            fCurrencies.add(currency);
+            tabSummary.addItem(fileName, groupName, currency, format);
+        }
+        return tabSummary;
+    }
 
-				ert.addRates2(fromCurrency, toCurrency, sFormat, rd) ;
-			}
-			//ert.dump() ;
+    private ExchangeRateTable parseExchangeRateTable(JSONObject jsonObject, TabSummary2 tabSummary, List<String> fromCurrencies) {
+        ExchangeRateTable exchangeRateTable = new ExchangeRateTable();
+        JSONArray targetCurrencies = (JSONArray) jsonObject.get(JSONKeys.TARGET_CURRENCIES);
 
-			reader.close();
-			tg = new tabGroup(ts, ert);
-			return tg;
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			return null;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		} catch (ParseException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
+        for (Object obj : targetCurrencies) {
+            JSONObject item = (JSONObject) obj;
+            String toCurrency = (String) item.get(JSONKeys.CURRENCY);
+            String format = (String) item.get(JSONKeys.FORMAT);
+
+            JSONArray ratesArray = (JSONArray) item.get(JSONKeys.RATES);
+            RateDate[] rateDates = new RateDate[ratesArray.size()];
+
+            for (int i = 0; i < ratesArray.size(); i++) {
+                JSONObject rateItem = (JSONObject) ratesArray.get(i);
+                double rate = Double.parseDouble((String) rateItem.get(JSONKeys.RATE));
+                String date = (String) rateItem.get(JSONKeys.DATE);
+                rateDates[i] = exchangeRateTable.new RateDate(rate, date);
+            }
+
+
+			String[] fromCurrency = new String[fromCurrencies.size()];
+			fromCurrency = fromCurrencies.toArray(fromCurrency) ;
+            exchangeRateTable.addRates(fromCurrency, toCurrency, format, rateDates);
+        }
+
+        //System.out.println("parseExchangeRateTable::" + exchangeRateTable);
+        return exchangeRateTable;
+    }
+
+    @Override
+    public String toString() {
+        return "ReadJson{}";
+    }
 }

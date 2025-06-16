@@ -1,16 +1,16 @@
 package gpGroupXLS.json;
 
 public interface JSONKeys {
-    // json
-	final String keyGrouptabs 			= "groupTabs" ;
-	final String keyFileName 			= "filename" ;
-	final String keyGroupName 			= "groupname" ;
-	final String keyCurrency 			= "currency" ;
-	final String keyFormat 				= "format" ;
-	final String keySumColumns 			= "sumColumns" ;
-	final String keyNumPersons 			= "numPersons" ;
-	final String keyTargetCurrrencies	= "targetCurrrencies" ;
-	final String keyRates 				= "rates" ;
-	final String keyRate 				= "rate" ;
-	final String keyDate 				= "date" ;
+    // JSON keys
+    String GROUP_TABS = "groupTabs";
+    String FILE_NAME = "filename";
+    String GROUP_NAME = "groupname";
+    String CURRENCY = "currency";
+    String FORMAT = "format";
+    String SUM_COLUMNS = "sumColumns";
+    String NUM_PERSONS = "numPersons";
+    String TARGET_CURRENCIES = "targetCurrrencies";
+    String RATES = "rates";
+    String RATE = "rate";
+    String DATE = "date";
 }

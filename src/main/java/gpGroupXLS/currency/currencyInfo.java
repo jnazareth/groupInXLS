@@ -1,15 +1,21 @@
 package gpGroupXLS.currency;
 
 import java.util.HashMap;
+import java.util.Map;
 
-public class currencyInfo {
-    private HashMap<String, String> m_CI = new HashMap<String, String>();
+public class CurrencyInfo {
+    private final Map<String, String> currencyFormats;
 
-    public currencyInfo(String c, String f) {
-        m_CI.put(c, f);
+    public CurrencyInfo(String currency, String format) {
+        currencyFormats = new HashMap<>();
+        addCurrencyFormat(currency, format);
+    }
+
+    public void addCurrencyFormat(String currency, String format) {
+        currencyFormats.put(currency, format);
     }
 
     public String getCurrencyFormat(String currency) {
-        return m_CI.get(currency);
+        return currencyFormats.get(currency);
     }
 }

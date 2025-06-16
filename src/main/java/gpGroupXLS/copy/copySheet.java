@@ -2,7 +2,6 @@ package gpGroupXLS.copy;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.apache.poi.common.usermodel.HyperlinkType;
@@ -18,196 +17,161 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import gpGroupXLS.group.XLSProperties;
-import gpGroupXLS.group.tabGroup;
+import gpGroupXLS.group.TabGroup;
 import gpGroupXLS.tabs.TabSummary2;
-import gpGroupXLS.tabs.TabSummary2.tabEntry2;
-import gpGroupXLS.tabs.TabSummary2.tabGroupBase;
+import gpGroupXLS.tabs.TabSummary2.TabEntry2;
+import gpGroupXLS.tabs.TabSummary2.TabGroupBase;;
 
-public class copySheet {
-    public copySheet() {
+public class CopySheet {
+
+    public CopySheet() {
         // constructor
     }
 
-    private void copyCell(XSSFWorkbook wbSummary, XSSFWorkbook wbToBeCopied, Cell currentCell, Cell newCell) {
-        try {
-            XSSFCellStyle cellStyle = wbSummary.createCellStyle();
-            DataFormat dFormat = wbSummary.createDataFormat();
-            String formatStr = currentCell.getCellStyle().getDataFormatString();
-            cellStyle.setDataFormat(dFormat.getFormat(formatStr));
-    
-            XSSFFont oldFont = wbToBeCopied.getFontAt(currentCell.getCellStyle().getFontIndex());
-            XSSFFont newFont = wbSummary.createFont();
-            newFont.setBold(oldFont.getBold());
-            newFont.setColor(oldFont.getColor());
-            newFont.setFontHeight(oldFont.getFontHeight());
-            newFont.setFontName(oldFont.getFontName());
-            newFont.setItalic(oldFont.getItalic());
-            newFont.setStrikeout(oldFont.getStrikeout());
-            newFont.setTypeOffset(oldFont.getTypeOffset());
-            newFont.setUnderline(oldFont.getUnderline());
-            newFont.setCharSet(oldFont.getCharSet());
-            cellStyle.setFont(newFont);
+    private void copyCellStyle(XSSFWorkbook targetWorkbook, XSSFWorkbook sourceWorkbook, Cell sourceCell, Cell targetCell) {
+        XSSFCellStyle targetCellStyle = targetWorkbook.createCellStyle();
+        DataFormat dataFormat = targetWorkbook.createDataFormat();
+        String formatString = sourceCell.getCellStyle().getDataFormatString();
+        targetCellStyle.setDataFormat(dataFormat.getFormat(formatString));
 
-            cellStyle.setAlignment(currentCell.getCellStyle().getAlignment());
-            cellStyle.setHidden(currentCell.getCellStyle().getHidden());
-            cellStyle.setLocked(currentCell.getCellStyle().getLocked());
-            cellStyle.setWrapText(currentCell.getCellStyle().getWrapText());
-            cellStyle.setBorderBottom(currentCell.getCellStyle().getBorderBottom());
-            cellStyle.setBorderLeft(currentCell.getCellStyle().getBorderLeft());
-            cellStyle.setBorderRight(currentCell.getCellStyle().getBorderRight());
-            cellStyle.setBorderTop(currentCell.getCellStyle().getBorderTop());
-            cellStyle.setFillBackgroundColor(currentCell.getCellStyle().getFillBackgroundColor());
-            cellStyle.setFillForegroundColor(currentCell.getCellStyle().getFillForegroundColor());
-            cellStyle.setFillPattern(currentCell.getCellStyle().getFillPattern());
-            cellStyle.setIndention(currentCell.getCellStyle().getIndention());
-            cellStyle.setBottomBorderColor(currentCell.getCellStyle().getBottomBorderColor());
-            cellStyle.setLeftBorderColor(currentCell.getCellStyle().getLeftBorderColor());
-            cellStyle.setRightBorderColor(currentCell.getCellStyle().getRightBorderColor());
-            cellStyle.setTopBorderColor(currentCell.getCellStyle().getTopBorderColor());
-            cellStyle.setRotation(currentCell.getCellStyle().getRotation());
-            cellStyle.setVerticalAlignment(currentCell.getCellStyle().getVerticalAlignment());
-            newCell.setCellStyle(cellStyle);
+        XSSFFont sourceFont = sourceWorkbook.getFontAt(sourceCell.getCellStyle().getFontIndex());
+        XSSFFont targetFont = targetWorkbook.createFont();
+        copyFontProperties(sourceFont, targetFont);
+        targetCellStyle.setFont(targetFont);
 
-            switch(currentCell.getCellType()) {
-                case STRING:
-                    String cV = currentCell.getStringCellValue() ;
-                    newCell.setCellValue(cV);
-                    break;
-                case NUMERIC:
-                    Double d = currentCell.getNumericCellValue() ;
-                    newCell.setCellValue(d);
-                    break;
-                default:
-                    break;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        copyCellStyleProperties(sourceCell, targetCellStyle);
+        targetCell.setCellStyle(targetCellStyle);
+    }
+
+    private void copyFontProperties(XSSFFont sourceFont, XSSFFont targetFont) {
+        targetFont.setBold(sourceFont.getBold());
+        targetFont.setColor(sourceFont.getColor());
+        targetFont.setFontHeight(sourceFont.getFontHeight());
+        targetFont.setFontName(sourceFont.getFontName());
+        targetFont.setItalic(sourceFont.getItalic());
+        targetFont.setStrikeout(sourceFont.getStrikeout());
+        targetFont.setTypeOffset(sourceFont.getTypeOffset());
+        targetFont.setUnderline(sourceFont.getUnderline());
+        targetFont.setCharSet(sourceFont.getCharSet());
+    }
+
+    private void copyCellStyleProperties(Cell sourceCell, XSSFCellStyle targetCellStyle) {
+        targetCellStyle.setAlignment(sourceCell.getCellStyle().getAlignment());
+        targetCellStyle.setHidden(sourceCell.getCellStyle().getHidden());
+        targetCellStyle.setLocked(sourceCell.getCellStyle().getLocked());
+        targetCellStyle.setWrapText(sourceCell.getCellStyle().getWrapText());
+        targetCellStyle.setBorderBottom(sourceCell.getCellStyle().getBorderBottom());
+        targetCellStyle.setBorderLeft(sourceCell.getCellStyle().getBorderLeft());
+        targetCellStyle.setBorderRight(sourceCell.getCellStyle().getBorderRight());
+        targetCellStyle.setBorderTop(sourceCell.getCellStyle().getBorderTop());
+        targetCellStyle.setFillBackgroundColor(sourceCell.getCellStyle().getFillBackgroundColor());
+        targetCellStyle.setFillForegroundColor(sourceCell.getCellStyle().getFillForegroundColor());
+        targetCellStyle.setFillPattern(sourceCell.getCellStyle().getFillPattern());
+        targetCellStyle.setIndention(sourceCell.getCellStyle().getIndention());
+        targetCellStyle.setBottomBorderColor(sourceCell.getCellStyle().getBottomBorderColor());
+        targetCellStyle.setLeftBorderColor(sourceCell.getCellStyle().getLeftBorderColor());
+        targetCellStyle.setRightBorderColor(sourceCell.getCellStyle().getRightBorderColor());
+        targetCellStyle.setTopBorderColor(sourceCell.getCellStyle().getTopBorderColor());
+        targetCellStyle.setRotation(sourceCell.getCellStyle().getRotation());
+        targetCellStyle.setVerticalAlignment(sourceCell.getCellStyle().getVerticalAlignment());
+    }
+
+    private void copyCellValue(Cell sourceCell, Cell targetCell) {
+        switch (sourceCell.getCellType()) {
+            case STRING:
+                targetCell.setCellValue(sourceCell.getStringCellValue());
+                break;
+            case NUMERIC:
+                targetCell.setCellValue(sourceCell.getNumericCellValue());
+                break;
+            default:
+                break;
         }
     }
 
-	private int copyContents2(XSSFWorkbook wbSummary, XSSFSheet sheetTarget, String groupName, XSSFSheet sheetToBeCopied) {
-        try {
-            int rowAdded = -1 ;
-            int row = sheetToBeCopied.getLastRowNum() ;
+    private int copySheetContents(XSSFWorkbook targetWorkbook, XSSFSheet targetSheet, XSSFSheet sourceSheet) {
+        int lastRowNum = sourceSheet.getLastRowNum();
+        for (int rowIndex = 0; rowIndex <= lastRowNum; rowIndex++) {
+            Row sourceRow = sourceSheet.getRow(rowIndex);
+            if (sourceRow != null) {
+                Row targetRow = targetSheet.createRow(rowIndex);
+                copyRowContents(targetWorkbook, sourceSheet.getWorkbook(), sourceRow, targetRow);
+            }
+        }
+        return lastRowNum;
+    }
 
-            XSSFWorkbook wbToBeCopied = sheetToBeCopied.getWorkbook();
-            for (int r = 0; r < row; r++) {
-                Row rowitr = sheetToBeCopied.getRow(r) ;
-                if (rowitr != null) {
-                    Row currentRow = sheetTarget.createRow(r);
-                    rowAdded = currentRow.getRowNum();
+    private void copyRowContents(XSSFWorkbook targetWorkbook, XSSFWorkbook sourceWorkbook, Row sourceRow, Row targetRow) {
+        int lastCellNum = sourceRow.getLastCellNum();
+        for (int cellIndex = 0; cellIndex < lastCellNum; cellIndex++) {
+            Cell sourceCell = sourceRow.getCell(cellIndex, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
+            if (sourceCell != null) {
+                Cell targetCell = targetRow.createCell(cellIndex);
+                copyCellStyle(targetWorkbook, sourceWorkbook, sourceCell, targetCell);
+                copyCellValue(sourceCell, targetCell);
+            }
+        }
+    }
 
-                    int lastColumn = rowitr.getLastCellNum() ;
-                    for (int col = 0; col < lastColumn; col++) {
-                        Cell celldata = rowitr.getCell(col, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
-                        if (celldata == null) {
-                            // The spreadsheet is empty in this cell
-                        } else {
-                            Cell cellTarget = currentRow.createCell(col);
-                            copyCell(wbSummary, wbToBeCopied, celldata, cellTarget) ;
-                        }
-                    }
+    private String generateSheetName(String fileName, String groupName) {
+        final String separator = ".";
+        String prefix = fileName.contains(separator) ? fileName.substring(0, fileName.indexOf(separator) + 1) : "";
+        String suffix = groupName.contains(separator) ? groupName.substring(groupName.lastIndexOf(separator) + 1) : "";
+        int hash = Math.abs((fileName + separator + groupName).hashCode() % 10000);
+        return prefix + "xlsx." + suffix + separator + hash;
+    }
+
+    public void buildCopySheets(XSSFWorkbook targetWorkbook, TabGroup tabGroup) {
+        TabSummary2 tabSummary = tabGroup.getTabSummary();
+        for (TabGroupBase tabGroupBase : tabSummary.getGroupTabs()) {
+            TabEntry2 groupItem = tabGroupBase.getTabEntry();
+            try (FileInputStream fileInputStream = new FileInputStream(new File(groupItem.getFileName()));
+                 XSSFWorkbook sourceWorkbook = new XSSFWorkbook(fileInputStream)) {
+
+                XSSFCreationHelper creationHelper = targetWorkbook.getCreationHelper();
+                XSSFHyperlink hyperlink = creationHelper.createHyperlink(HyperlinkType.DOCUMENT);
+
+                String sheetName = copySheet(sourceWorkbook, groupItem.getFileName(), groupItem.getGroupName(), targetWorkbook);
+                if (sheetName != null) {
+                    updateSummarySheet(targetWorkbook, tabGroupBase.getRowNumber(), groupItem.getGroupName(), sheetName, hyperlink);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void updateSummarySheet(XSSFWorkbook targetWorkbook, int rowNumber, String groupName, String sheetName, XSSFHyperlink hyperlink) {
+        if (rowNumber != -1) {
+            XSSFSheet summarySheet = targetWorkbook.getSheet(XLSProperties.SUMMARY_SHEET_NAME);
+            if (summarySheet != null) {
+                Row row = summarySheet.getRow(rowNumber);
+                if (row != null) {
+                    Cell cell = row.createCell(0);
+                    String cellReference = sheetName + "!$A$1";
+                    CellReference cellRef = new CellReference(cellReference);
+                    cell.setCellValue(groupName);
+                    hyperlink.setAddress(cellRef.formatAsString());
+                    cell.setHyperlink(hyperlink);
                 }
             }
-            return (rowAdded) ;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return -1;
         }
-    }   
-    
-    private String makeSheetName (String fileName, String groupName) {
-        final String _sep = "." ;
-        String p = "";
-        int nPrefix = fileName.indexOf(_sep) ;
-        if (nPrefix != -1) p = fileName.substring(0, nPrefix + 1);
-
-        String s = ""; 
-        int nSuffix = groupName.lastIndexOf(_sep) ;
-        int nSuffix2 = 0;
-        if (nSuffix != -1) nSuffix2 = groupName.lastIndexOf(_sep, nSuffix-1);
-        if (nSuffix2 != -1) s = groupName.substring(nSuffix2 + 1);
-
-        String n = fileName + _sep + groupName;
-        int h = Math.abs(n.hashCode() % 10000) ;    // last 4 digits
-        String hashName = p + "xlsx." + s + _sep + h ;
-        //System.out.println(groupName + "\t" + hashName + "\t" + hashName.length()) ;
-
-        return hashName;
     }
 
-	public void buildCopySheets(XSSFWorkbook workBookGroup, tabGroup tg) {
-		try {
-			XSSFWorkbook workBookIn = null;
-			TabSummary2 ts = tg.m_tabSummary ;
-			for (tabGroupBase tgb : ts.m_groupTabs) {
-				tabEntry2 gItem = tgb.te;
-				File fIn = new File(gItem.fileName);
-				FileInputStream fileIn = new FileInputStream(fIn);
-				workBookIn = new XSSFWorkbook(fileIn);
+    public String copySheet(XSSFWorkbook sourceWorkbook, String fileName, String groupName, XSSFWorkbook targetWorkbook) {
+        XSSFSheet sourceSheet = sourceWorkbook.getSheet(groupName);
+        if (sourceSheet == null) return null;
 
-				XSSFCreationHelper createHelper = workBookGroup.getCreationHelper();
-				XSSFHyperlink sheetLink = createHelper.createHyperlink(HyperlinkType.DOCUMENT);
+        String targetSheetName = generateSheetName(fileName, groupName);
+        XSSFSheet targetSheet = targetWorkbook.createSheet(targetSheetName);
+        if (targetSheet == null) return null;
 
-				copySheet cSheet = new copySheet() ;
-				String sName = cSheet.copyASheet(workBookIn, gItem.fileName, gItem.groupName, workBookGroup) ;
-				if (sName != null) {
-					int p = tgb.rowNumber;
-					if (p != -1) {
-						XSSFSheet sheetSummary = workBookGroup.getSheet(XLSProperties._SummarySheetName) ;
-						if (sheetSummary == null) break ;
-
-						Row r = sheetSummary.getRow(p) ;
-						if (r == null) break ;
-
-						Cell cellSheetReference = r.createCell(0);
-						if (cellSheetReference == null) break ;
-
-						String sNameR = sName + "!$A$1" ;
-						CellReference s2a1 = new CellReference(sNameR);
-						if (s2a1 != null) {
-							String sLink = s2a1.formatAsString();
-							cellSheetReference.setCellValue(gItem.groupName) ;//sLink
-							sheetLink.setAddress(sLink);
-							cellSheetReference.setHyperlink(sheetLink);
-							//cellSheetReference.setCellStyle(hlink_style);
-						}
-					}
-				}
-				fileIn.close() ;
-			}
-			try {
-				workBookIn.close();
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-    public String copyASheet(XSSFWorkbook workBookIn, String fileName, String groupName, XSSFWorkbook workBookGroup) {
-        try {
-            XSSFSheet sheetToBeCopied = workBookIn.getSheet(groupName) ;
-            if (sheetToBeCopied == null) return null ;
-
-            String tName = makeSheetName(fileName, groupName);
-            XSSFSheet sheetTarget = workBookGroup.createSheet(tName);
-            if (sheetTarget == null) return null ;
-
-            int rowsCopied = copyContents2(workBookGroup, sheetTarget, groupName, sheetToBeCopied) ;
-            return tName;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+        copySheetContents(targetWorkbook, targetSheet, sourceSheet);
+        return targetSheetName;
     }
 
     @Override
     public String toString() {
-        // TODO Auto-generated method stub
         return super.toString();
-    }    
+    }
 }
